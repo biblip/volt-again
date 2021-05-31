@@ -1,0 +1,57 @@
+type Task
+    @model
+    @auth(
+        rules: [
+            { allow: public, provider: iam, operations: [read] }
+            { allow: private, operations: [read] }
+            { allow: owner, operations: [create, update, delete, read] }
+        ]
+    ) {
+        id: ID!
+        title: String!
+        description: String
+        status: String
+    }
+
+type AppLink
+    @model
+    @auth(
+        rules: [
+            { allow: public, provider: iam, operations: [create] }
+            { allow: private, operations: [create, update] }
+        ]
+    ) {
+        id: ID!
+        protocol: String!
+        domain: String!
+        resource: String
+    }
+
+type Post
+    @model
+    @auth(
+        rules: [
+            { allow: public, provider: iam, operations: [read] }
+            { allow: private, operations: [read] }
+            { allow: owner, operations: [create, update, read] }
+        ]
+    ) {
+        id: ID!
+        title: String!
+        content: String!
+        status: String
+    }
+
+type Comment
+    @model
+    @auth(
+        rules: [
+            { allow: public, provider: iam, operations: [read] }
+            { allow: private, operations: [read] }
+            { allow: owner, operations: [create, update, read] }
+        ]
+    ) {
+        id: ID!
+        content: String!
+        status: String
+    }

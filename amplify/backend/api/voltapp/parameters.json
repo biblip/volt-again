@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "voltapp",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authvoltapp72ddc6e972ddc6e9",
+      "Outputs.UserPoolId"
+    ]
+  }
+}
