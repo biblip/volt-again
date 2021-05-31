@@ -54,4 +54,4 @@ type Comment
         id: ID!
         content: String!
         status: String
-    }
+    } 

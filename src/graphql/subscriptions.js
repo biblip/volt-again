@@ -1,42 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateAppLink = /* GraphQL */ `
-  subscription OnCreateAppLink {
-    onCreateAppLink {
-      id
-      protocol
-      domain
-      resource
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateAppLink = /* GraphQL */ `
-  subscription OnUpdateAppLink {
-    onUpdateAppLink {
-      id
-      protocol
-      domain
-      resource
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteAppLink = /* GraphQL */ `
-  subscription OnDeleteAppLink {
-    onDeleteAppLink {
-      id
-      protocol
-      domain
-      resource
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateTask = /* GraphQL */ `
   subscription OnCreateTask {
     onCreateTask {
@@ -44,6 +8,9 @@ export const onCreateTask = /* GraphQL */ `
       title
       description
       status
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -57,6 +24,9 @@ export const onUpdateTask = /* GraphQL */ `
       title
       description
       status
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -70,9 +40,57 @@ export const onDeleteTask = /* GraphQL */ `
       title
       description
       status
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
       owner
+    }
+  }
+`;
+export const onCreateAppLink = /* GraphQL */ `
+  subscription OnCreateAppLink {
+    onCreateAppLink {
+      id
+      protocol
+      domain
+      resource
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAppLink = /* GraphQL */ `
+  subscription OnUpdateAppLink {
+    onUpdateAppLink {
+      id
+      protocol
+      domain
+      resource
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAppLink = /* GraphQL */ `
+  subscription OnDeleteAppLink {
+    onDeleteAppLink {
+      id
+      protocol
+      domain
+      resource
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -83,6 +101,9 @@ export const onCreatePost = /* GraphQL */ `
       title
       content
       status
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -96,6 +117,9 @@ export const onUpdatePost = /* GraphQL */ `
       title
       content
       status
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -109,6 +133,9 @@ export const onDeletePost = /* GraphQL */ `
       title
       content
       status
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -121,6 +148,9 @@ export const onCreateComment = /* GraphQL */ `
       id
       content
       status
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -133,6 +163,9 @@ export const onUpdateComment = /* GraphQL */ `
       id
       content
       status
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -145,6 +178,9 @@ export const onDeleteComment = /* GraphQL */ `
       id
       content
       status
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
       owner

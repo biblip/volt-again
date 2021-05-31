@@ -11,6 +11,9 @@ export const createTask = /* GraphQL */ `
       title
       description
       status
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -27,6 +30,9 @@ export const updateTask = /* GraphQL */ `
       title
       description
       status
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -43,129 +49,9 @@ export const deleteTask = /* GraphQL */ `
       title
       description
       status
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const updateAppLink = /* GraphQL */ `
-  mutation UpdateAppLink(
-    $input: UpdateAppLinkInput!
-    $condition: ModelAppLinkConditionInput
-  ) {
-    updateAppLink(input: $input, condition: $condition) {
-      id
-      protocol
-      domain
-      resource
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteAppLink = /* GraphQL */ `
-  mutation DeleteAppLink(
-    $input: DeleteAppLinkInput!
-    $condition: ModelAppLinkConditionInput
-  ) {
-    deleteAppLink(input: $input, condition: $condition) {
-      id
-      protocol
-      domain
-      resource
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createPost = /* GraphQL */ `
-  mutation CreatePost(
-    $input: CreatePostInput!
-    $condition: ModelPostConditionInput
-  ) {
-    createPost(input: $input, condition: $condition) {
-      id
-      title
-      content
-      status
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const updatePost = /* GraphQL */ `
-  mutation UpdatePost(
-    $input: UpdatePostInput!
-    $condition: ModelPostConditionInput
-  ) {
-    updatePost(input: $input, condition: $condition) {
-      id
-      title
-      content
-      status
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const deletePost = /* GraphQL */ `
-  mutation DeletePost(
-    $input: DeletePostInput!
-    $condition: ModelPostConditionInput
-  ) {
-    deletePost(input: $input, condition: $condition) {
-      id
-      title
-      content
-      status
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const createComment = /* GraphQL */ `
-  mutation CreateComment(
-    $input: CreateCommentInput!
-    $condition: ModelCommentConditionInput
-  ) {
-    createComment(input: $input, condition: $condition) {
-      id
-      content
-      status
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const updateComment = /* GraphQL */ `
-  mutation UpdateComment(
-    $input: UpdateCommentInput!
-    $condition: ModelCommentConditionInput
-  ) {
-    updateComment(input: $input, condition: $condition) {
-      id
-      content
-      status
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const deleteComment = /* GraphQL */ `
-  mutation DeleteComment(
-    $input: DeleteCommentInput!
-    $condition: ModelCommentConditionInput
-  ) {
-    deleteComment(input: $input, condition: $condition) {
-      id
-      content
-      status
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
       owner
@@ -182,8 +68,158 @@ export const createAppLink = /* GraphQL */ `
       protocol
       domain
       resource
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
+    }
+  }
+`;
+export const updateAppLink = /* GraphQL */ `
+  mutation UpdateAppLink(
+    $input: UpdateAppLinkInput!
+    $condition: ModelAppLinkConditionInput
+  ) {
+    updateAppLink(input: $input, condition: $condition) {
+      id
+      protocol
+      domain
+      resource
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAppLink = /* GraphQL */ `
+  mutation DeleteAppLink(
+    $input: DeleteAppLinkInput!
+    $condition: ModelAppLinkConditionInput
+  ) {
+    deleteAppLink(input: $input, condition: $condition) {
+      id
+      protocol
+      domain
+      resource
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createPost = /* GraphQL */ `
+  mutation CreatePost(
+    $input: CreatePostInput!
+    $condition: ModelPostConditionInput
+  ) {
+    createPost(input: $input, condition: $condition) {
+      id
+      title
+      content
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updatePost = /* GraphQL */ `
+  mutation UpdatePost(
+    $input: UpdatePostInput!
+    $condition: ModelPostConditionInput
+  ) {
+    updatePost(input: $input, condition: $condition) {
+      id
+      title
+      content
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deletePost = /* GraphQL */ `
+  mutation DeletePost(
+    $input: DeletePostInput!
+    $condition: ModelPostConditionInput
+  ) {
+    deletePost(input: $input, condition: $condition) {
+      id
+      title
+      content
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createComment = /* GraphQL */ `
+  mutation CreateComment(
+    $input: CreateCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    createComment(input: $input, condition: $condition) {
+      id
+      content
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateComment = /* GraphQL */ `
+  mutation UpdateComment(
+    $input: UpdateCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    updateComment(input: $input, condition: $condition) {
+      id
+      content
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteComment = /* GraphQL */ `
+  mutation DeleteComment(
+    $input: DeleteCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    deleteComment(input: $input, condition: $condition) {
+      id
+      content
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
     }
   }
 `;

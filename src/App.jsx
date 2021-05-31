@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react';
 import { AuthModeStrategyType, DataStore, Predicates } from "@aws-amplify/datastore";
 import { Task } from './models';
-import { Button, Card, CardActions, CardContent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core';
 
 import awsConfig from './aws-exports';
-import Amplify from '@aws-amplify/core';
+import Amplify, { Hub } from '@aws-amplify/core';
 import Auth from '@aws-amplify/auth';
+
+import DeleteIcon from '@material-ui/icons/Delete';
 
 Amplify.configure({
     ...awsConfig,
@@ -17,24 +19,31 @@ Amplify.configure({
 });
 
 function App() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
     const [taskList, setTaskList] = useState([]);
+
+    const hubAuth = (event) => {
+        setCurrentUser(event.payload.data);
+    }
 
     useEffect(() => {
         AssessLoggedInState();
         const subscription = DataStore.observe(Task).subscribe((msg) => {
             getTasks();
         });
-        getTasks();        
-      
-        return () => subscription.unsubscribe();
+        getTasks();
+        Hub.listen('auth', hubAuth)
+        return () => {
+            Hub.remove('auth', hubAuth);
+            subscription.unsubscribe();
+        }
     }, []);
 
-    const AssessLoggedInState = () => {
-        Auth.currentAuthenticatedUser().then(() => {
-            setIsAuthenticated(true);
+    const AssessLoggedInState = async () => {
+        Auth.currentAuthenticatedUser().then((user) => {
+            setCurrentUser(user);
         }).catch(() => {
-            setIsAuthenticated(false);
+            setCurrentUser(null);
         })
     }
     
@@ -67,11 +76,11 @@ function App() {
         getTasks();
     }
 
-    const signIn  = async (user, password) => {
+    const signIn  = async (userName, password) => {
         try {
             //const user = await Auth.signIn("user1@cuplease.com","mmmm3333");
-            await Auth.signIn(user, password);
-            setIsAuthenticated(true);
+            const user = await Auth.signIn(userName, password);
+            setCurrentUser(user);
         } catch (error) {
             console.log('Error signing in ', error);
         }
@@ -80,10 +89,19 @@ function App() {
     const signOut = async() => {
         try {
             await Auth.signOut();
-            setIsAuthenticated(false);
+            setCurrentUser(null);
         } catch (error) {
             console.log('error signing out ', error);
         }
+    }
+
+    const clearDatastore = () => {
+        DataStore.clear();
+    }
+
+    const deleteItem = async (item) => {
+        const modelToDelete = await DataStore.query(Task, item.id);
+        DataStore.delete(modelToDelete);
     }
 
     return (
@@ -92,12 +110,15 @@ function App() {
                 <Button variant="outlined" onClick={createTask}>New</Button>
                 <Button variant="outlined" onClick={deleteAll}>Delete All</Button>
                 {
-                    isAuthenticated ? <Button variant="outlined" onClick={signOut}>Sign Out</Button>
+                    currentUser ? <div><Button variant="outlined" onClick={signOut}>Sign Out </Button>
+                    {currentUser.attributes.email}
+                    </div>
                     :
                     <div>
                         <Button variant="outlined" onClick={() => signIn("user1@cuplease.com","mmmm3333")}>Sign In user1</Button>
                         <Button variant="outlined" onClick={() => signIn("user2@cuplease.com","mmmm3333")}>Sign In user2</Button>
                         <Button variant="outlined" onClick={() => signIn("user3@cuplease.com","mmmm3333")}>Sign In user3</Button>
+                        <Button variant="outlined" onClick={() => clearDatastore()}>Clear</Button>
                     </div>
                 }                
             </CardActions>
@@ -107,7 +128,7 @@ function App() {
                         <TableHead>
                             <TableRow>
                                         <TableCell>
-                                            owner
+                                            actions
                                         </TableCell>
                                         <TableCell>
                                             id
@@ -128,7 +149,16 @@ function App() {
                             taskList.map( (item, index) => 
                                 <TableRow key={index}>
                                     <TableCell>
-                                        {item.owner}
+                                        {
+
+                                            (() => {
+                                                if (currentUser) {
+                                                    if (currentUser.username === item.owner) {
+                                                        return <IconButton onClick={()=> deleteItem(item)}><DeleteIcon/></IconButton>
+                                                    }
+                                                }
+                                            })()
+                                        }                                        
                                     </TableCell>
                                     <TableCell>
                                         {item.id}
