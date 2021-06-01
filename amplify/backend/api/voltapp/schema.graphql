@@ -1,9 +1,8 @@
 type Task
     @model
-    @auth(
-        rules: [
-            { allow: public, provider: iam, operations: [read] }
-            { allow: private, operations: [read] }
+    @auth(rules: [
+            { allow: public, provider: iam, operations: [read] },
+            { allow: private, operations: [read] },
             { allow: owner, operations: [create, update, delete, read] }
         ]
     ) {
@@ -15,10 +14,9 @@ type Task
 
 type AppLink
     @model
-    @auth(
-        rules: [
-            { allow: public, provider: iam, operations: [create] }
-            { allow: private, operations: [create, update] }
+    @auth(rules: [
+            { allow: public, provider: iam, operations: [create, read] },
+            { allow: private, operations: [create, update, read] }
         ]
     ) {
         id: ID!
@@ -29,10 +27,9 @@ type AppLink
 
 type Post
     @model
-    @auth(
-        rules: [
-            { allow: public, provider: iam, operations: [read] }
-            { allow: private, operations: [read] }
+    @auth(rules: [
+            { allow: public, provider: iam, operations: [read] },
+            { allow: private, operations: [read] },
             { allow: owner, operations: [create, update, read] }
         ]
     ) {
@@ -44,10 +41,9 @@ type Post
 
 type Comment
     @model
-    @auth(
-        rules: [
-            { allow: public, provider: iam, operations: [read] }
-            { allow: private, operations: [read] }
+    @auth(rules: [
+            { allow: public, provider: iam, operations: [read] },
+            { allow: private, operations: [read] },
             { allow: owner, operations: [create, update, read] }
         ]
     ) {

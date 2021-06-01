@@ -152,14 +152,16 @@ export const schema = {
                                 "allow": "public",
                                 "provider": "iam",
                                 "operations": [
-                                    "create"
+                                    "create",
+                                    "read"
                                 ]
                             },
                             {
                                 "allow": "private",
                                 "operations": [
                                     "create",
-                                    "update"
+                                    "update",
+                                    "read"
                                 ]
                             }
                         ]
