@@ -120,6 +120,20 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "posts": {
+                    "name": "posts",
+                    "isArray": true,
+                    "type": {
+                        "model": "Post"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "applinkID"
+                    }
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -200,6 +214,27 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "comments": {
+                    "name": "comments",
+                    "isArray": true,
+                    "type": {
+                        "model": "Comment"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "postID"
+                    }
+                },
+                "applinkID": {
+                    "name": "applinkID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -223,6 +258,15 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byAppLink",
+                        "fields": [
+                            "applinkID"
+                        ]
+                    }
                 },
                 {
                     "type": "auth",
@@ -281,6 +325,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "postID": {
+                    "name": "postID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -304,6 +355,15 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byPost",
+                        "fields": [
+                            "postID"
+                        ]
+                    }
                 },
                 {
                     "type": "auth",
@@ -341,5 +401,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "8f98dc26347415c0b2b71ff722d1d849"
+    "version": "f0f18c31d8f07d75d8fe2b2cc60f56a2"
 };

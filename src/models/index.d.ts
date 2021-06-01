@@ -20,6 +20,7 @@ export declare class AppLink {
   readonly protocol: string;
   readonly domain: string;
   readonly resource?: string;
+  readonly posts?: (Post | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<AppLink>);
@@ -31,6 +32,8 @@ export declare class Post {
   readonly title: string;
   readonly content: string;
   readonly status?: string;
+  readonly comments?: (Comment | null)[];
+  readonly applinkID?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Post>);
@@ -41,6 +44,7 @@ export declare class Comment {
   readonly id: string;
   readonly content: string;
   readonly status?: string;
+  readonly postID?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Comment>);

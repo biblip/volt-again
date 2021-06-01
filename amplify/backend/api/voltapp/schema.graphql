@@ -17,12 +17,14 @@ type AppLink
     @auth(rules: [
             { allow: public, provider: iam, operations: [create, read] },
             { allow: private, operations: [create, update, read] }
+            { allow: owner, operations: [create, update, read] }
         ]
     ) {
         id: ID!
         protocol: String!
         domain: String!
         resource: String
+        posts: [Post] @connection(keyName: "byAppLink", fields: ["id"])
     }
 
 type Post
@@ -32,11 +34,13 @@ type Post
             { allow: private, operations: [read] },
             { allow: owner, operations: [create, update, read] }
         ]
-    ) {
+    ) @key(name: "byAppLink", fields: ["applinkID"]) {
         id: ID!
         title: String!
         content: String!
         status: String
+        comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
+        applinkID: ID
     }
 
 type Comment
@@ -46,8 +50,9 @@ type Comment
             { allow: private, operations: [read] },
             { allow: owner, operations: [create, update, read] }
         ]
-    ) {
+    ) @key(name: "byPost", fields: ["postID"]) {
         id: ID!
         content: String!
         status: String
+        postID: ID
     } 
