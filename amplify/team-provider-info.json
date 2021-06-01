@@ -1,19 +1,19 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-voltapp-dev-124821-authRole",
-      "UnauthRoleArn": "arn:aws:iam::666262505479:role/amplify-voltapp-dev-124821-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::666262505479:role/amplify-voltapp-dev-124821-authRole",
+      "AuthRoleName": "amplify-voltapp-dev-104626-authRole",
+      "UnauthRoleArn": "arn:aws:iam::666262505479:role/amplify-voltapp-dev-104626-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::666262505479:role/amplify-voltapp-dev-104626-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-voltapp-dev-124821-deployment",
-      "UnauthRoleName": "amplify-voltapp-dev-124821-unauthRole",
-      "StackName": "amplify-voltapp-dev-124821",
-      "StackId": "arn:aws:cloudformation:us-east-1:666262505479:stack/amplify-voltapp-dev-124821/65ddbd80-c238-11eb-9217-12328959da6d",
-      "AmplifyAppId": "d3fisy9u4mxiun"
+      "DeploymentBucketName": "amplify-voltapp-dev-104626-deployment",
+      "UnauthRoleName": "amplify-voltapp-dev-104626-unauthRole",
+      "StackName": "amplify-voltapp-dev-104626",
+      "StackId": "arn:aws:cloudformation:us-east-1:666262505479:stack/amplify-voltapp-dev-104626/8ad84160-c2f0-11eb-8412-0a8742d8c83d",
+      "AmplifyAppId": "d1e8z78a3i75cn"
     },
     "categories": {
       "auth": {
-        "voltapp72ddc6e972ddc6e9": {}
+        "voltapp38db89ff38db89ff": {}
       }
     }
   }

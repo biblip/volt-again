@@ -1,6 +1,6 @@
 {
   "auth": {
-    "voltapp72ddc6e972ddc6e9": {
+    "voltapp38db89ff38db89ff": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -16,7 +16,7 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authvoltapp72ddc6e9_userpool_72ddc6e9"
+              "userPoolId": "authvoltapp38db89ff_userpool_38db89ff"
             }
           },
           "additionalAuthenticationProviders": [
