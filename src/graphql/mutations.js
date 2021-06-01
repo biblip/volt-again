@@ -73,6 +73,11 @@ export const createAppLink = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
+      posts {
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -91,6 +96,11 @@ export const updateAppLink = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
+      posts {
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -109,6 +119,11 @@ export const deleteAppLink = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
+      posts {
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -122,12 +137,17 @@ export const createPost = /* GraphQL */ `
       title
       content
       status
+      applinkID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
+      comments {
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -141,12 +161,17 @@ export const updatePost = /* GraphQL */ `
       title
       content
       status
+      applinkID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
+      comments {
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -160,12 +185,17 @@ export const deletePost = /* GraphQL */ `
       title
       content
       status
+      applinkID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
+      comments {
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -178,6 +208,7 @@ export const createComment = /* GraphQL */ `
       id
       content
       status
+      postID
       _version
       _deleted
       _lastChangedAt
@@ -196,6 +227,7 @@ export const updateComment = /* GraphQL */ `
       id
       content
       status
+      postID
       _version
       _deleted
       _lastChangedAt
@@ -214,6 +246,7 @@ export const deleteComment = /* GraphQL */ `
       id
       content
       status
+      postID
       _version
       _deleted
       _lastChangedAt

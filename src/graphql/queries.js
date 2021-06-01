@@ -83,6 +83,11 @@ export const getAppLink = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
+      posts {
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -103,6 +108,7 @@ export const listAppLinks = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
+        owner
       }
       nextToken
       startedAt
@@ -132,6 +138,7 @@ export const syncAppLinks = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
+        owner
       }
       nextToken
       startedAt
@@ -145,12 +152,17 @@ export const getPost = /* GraphQL */ `
       title
       content
       status
+      applinkID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
+      comments {
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -166,6 +178,7 @@ export const listPosts = /* GraphQL */ `
         title
         content
         status
+        applinkID
         _version
         _deleted
         _lastChangedAt
@@ -196,6 +209,7 @@ export const syncPosts = /* GraphQL */ `
         title
         content
         status
+        applinkID
         _version
         _deleted
         _lastChangedAt
@@ -214,6 +228,7 @@ export const getComment = /* GraphQL */ `
       id
       content
       status
+      postID
       _version
       _deleted
       _lastChangedAt
@@ -234,6 +249,7 @@ export const listComments = /* GraphQL */ `
         id
         content
         status
+        postID
         _version
         _deleted
         _lastChangedAt
@@ -263,6 +279,7 @@ export const syncComments = /* GraphQL */ `
         id
         content
         status
+        postID
         _version
         _deleted
         _lastChangedAt

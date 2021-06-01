@@ -61,6 +61,11 @@ export const onCreateAppLink = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
+      posts {
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -76,6 +81,11 @@ export const onUpdateAppLink = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
+      posts {
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -91,6 +101,11 @@ export const onDeleteAppLink = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
+      owner
+      posts {
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -101,12 +116,17 @@ export const onCreatePost = /* GraphQL */ `
       title
       content
       status
+      applinkID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
+      comments {
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -117,12 +137,17 @@ export const onUpdatePost = /* GraphQL */ `
       title
       content
       status
+      applinkID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
+      comments {
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -133,12 +158,17 @@ export const onDeletePost = /* GraphQL */ `
       title
       content
       status
+      applinkID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
+      comments {
+        nextToken
+        startedAt
+      }
     }
   }
 `;
@@ -148,6 +178,7 @@ export const onCreateComment = /* GraphQL */ `
       id
       content
       status
+      postID
       _version
       _deleted
       _lastChangedAt
@@ -163,6 +194,7 @@ export const onUpdateComment = /* GraphQL */ `
       id
       content
       status
+      postID
       _version
       _deleted
       _lastChangedAt
@@ -178,6 +210,7 @@ export const onDeleteComment = /* GraphQL */ `
       id
       content
       status
+      postID
       _version
       _deleted
       _lastChangedAt

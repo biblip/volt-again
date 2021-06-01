@@ -177,6 +177,17 @@ export const schema = {
                                     "update",
                                     "read"
                                 ]
+                            },
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "read"
+                                ],
+                                "identityClaim": "cognito:username"
                             }
                         ]
                     }
