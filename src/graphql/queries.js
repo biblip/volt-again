@@ -115,6 +115,38 @@ export const listAppLinks = /* GraphQL */ `
     }
   }
 `;
+export const searchAppLinks = /* GraphQL */ `
+  query SearchAppLinks(
+    $filter: SearchableAppLinkFilterInput
+    $sort: SearchableAppLinkSortInput
+    $limit: Int
+    $nextToken: String
+    $from: Int
+  ) {
+    searchAppLinks(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+    ) {
+      items {
+        id
+        protocol
+        domain
+        resource
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      total
+    }
+  }
+`;
 export const syncAppLinks = /* GraphQL */ `
   query SyncAppLinks(
     $filter: ModelAppLinkFilterInput
