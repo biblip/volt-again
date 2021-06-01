@@ -23,6 +23,8 @@ const useStyles = makeStyles((theme) => ({
     box: {
         paddingLeft: '16px',
         paddingRight: '16px',
+        maxWidth: '50%',
+        margin: 'auto',
     },
     logoImage: {
         width: "150px",
@@ -119,9 +121,15 @@ const useStyles = makeStyles((theme) => ({
 function App(props) {
     const classes = useStyles();
 
+    var query = '';
+
+    function doSearch(query) {
+        console.log("doSearch : " + query);
+    }
+
     return (
         <div className={classes.box}>
-            {/* <SearchBar></SearchBar> */}
+            <SearchBar query={query} doSearch={doSearch}></SearchBar>
         </div>
     )
 }
