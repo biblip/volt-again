@@ -186,7 +186,7 @@ function getTralato(a) {
                                 <TextField
                                     id="query"
                                     style={{ width: "100%" }}
-                                    placeholder={getTralato('Search for products or stores') + '...'}
+                                    placeholder={getTralato('Search appLinks') + '...'}
                                     type="search"
                                     defaultValue={query}
                                     // onChange={(e) => { if (props.onChange) { props.onChange(e.target.value) } }}
