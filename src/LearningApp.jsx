@@ -4,12 +4,11 @@ import { useEffect, useState } from 'react';
 import { AuthModeStrategyType, DataStore, Predicates } from "@aws-amplify/datastore";
 import { Task } from './models';
 import { Button, Card, CardActions, CardContent, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import awsConfig from './aws-exports';
 import Amplify, { Hub } from '@aws-amplify/core';
 import Auth from '@aws-amplify/auth';
-
-import DeleteIcon from '@material-ui/icons/Delete';
 
 Amplify.configure({
     ...awsConfig,
@@ -46,13 +45,6 @@ function App() {
             setCurrentUser(null);
         })
     }
-    
-    /*
-    Amplify.configure({
-        ...awsconfig,
-        aws_appsync_authenticationType: isAuthenticated ? 'AMAZON_COGNITO_USER_POOLS' : 'AWS_IAM',
-    });
-    */
 
     async function getTasks() {
         const models = await DataStore.query(Task);

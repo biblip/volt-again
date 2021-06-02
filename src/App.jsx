@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { AuthModeStrategyType, DataStore, Predicates } from "@aws-amplify/datastore";
 import { Task } from './models';
-import { makeStyles, withStyles } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, makeStyles, withStyles } from '@material-ui/core';
 
 import awsConfig from './aws-exports';
 import Amplify, { Hub } from '@aws-amplify/core';
@@ -18,6 +18,7 @@ Amplify.configure({
         authModeStrategyType: AuthModeStrategyType.MULTI_AUTH
     }
 });
+
 
 const useStyles = makeStyles((theme) => ({
     box: {
@@ -119,18 +120,82 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function App(props) {
+    const [currentUser, setCurrentUser] = useState(null);
     const classes = useStyles();
 
     var query = '';
+
+    const hubAuth = (event) => {
+        setCurrentUser(event.payload.data);
+    }
+
+    useEffect(() => {
+        AssessLoggedInState();
+        // const subscription = DataStore.observe(Task).subscribe((msg) => {
+        //     getTasks();
+        // });
+        // getTasks();
+        Hub.listen('auth', hubAuth)
+        return () => {
+            Hub.remove('auth', hubAuth);
+            //subscription.unsubscribe();
+        }
+    }, []);
+
+    const AssessLoggedInState = async () => {
+        Auth.currentAuthenticatedUser().then((user) => {
+            setCurrentUser(user);
+        }).catch(() => {
+            setCurrentUser(null);
+        })
+    }
 
     function doSearch(query) {
         console.log("doSearch : " + query);
     }
 
+    const signIn  = async (userName, password) => {
+        try {
+            //const user = await Auth.signIn("user1@cuplease.com","mmmm3333");
+            const user = await Auth.signIn(userName, password);
+            setCurrentUser(user);
+        } catch (error) {
+            console.log('Error signing in ', error);
+        }
+    }
+
+    const signOut = async() => {
+        try {
+            await Auth.signOut();
+            setCurrentUser(null);
+        } catch (error) {
+            console.log('error signing out ', error);
+        }
+    }
+
     return (
-        <div className={classes.box}>
-            <SearchBar query={query} doSearch={doSearch}></SearchBar>
-        </div>
+        <Card>
+            <CardActions>
+                <Button variant="outlined" >New</Button>
+                <Button variant="outlined" >Delete All</Button>
+                {
+                    currentUser ? <div><Button variant="outlined" onClick={signOut}>Sign Out </Button>
+                    {currentUser.attributes.email}
+                    </div>
+                    :
+                    <div>
+                        <Button variant="outlined" onClick={() => signIn("user1@cuplease.com","mmmm3333")}>Sign In user1</Button>
+                        <Button variant="outlined" onClick={() => signIn("user2@cuplease.com","mmmm3333")}>Sign In user2</Button>
+                        <Button variant="outlined" onClick={() => signIn("user3@cuplease.com","mmmm3333")}>Sign In user3</Button>
+                    </div>
+                }
+            </CardActions>
+            <CardContent>
+                <div className={classes.box}>
+                    <SearchBar query={query} doSearch={doSearch}></SearchBar>
+                </div>
+            </CardContent>
+        </Card>
     )
 }
 
