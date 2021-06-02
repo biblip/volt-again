@@ -58,6 +58,111 @@ export const deleteTask = /* GraphQL */ `
     }
   }
 `;
+export const createSuggestedAppLink = /* GraphQL */ `
+  mutation CreateSuggestedAppLink(
+    $input: CreateSuggestedAppLinkInput!
+    $condition: ModelSuggestedAppLinkConditionInput
+  ) {
+    createSuggestedAppLink(input: $input, condition: $condition) {
+      id
+      protocol
+      domain
+      resource
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateSuggestedAppLink = /* GraphQL */ `
+  mutation UpdateSuggestedAppLink(
+    $input: UpdateSuggestedAppLinkInput!
+    $condition: ModelSuggestedAppLinkConditionInput
+  ) {
+    updateSuggestedAppLink(input: $input, condition: $condition) {
+      id
+      protocol
+      domain
+      resource
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteSuggestedAppLink = /* GraphQL */ `
+  mutation DeleteSuggestedAppLink(
+    $input: DeleteSuggestedAppLinkInput!
+    $condition: ModelSuggestedAppLinkConditionInput
+  ) {
+    deleteSuggestedAppLink(input: $input, condition: $condition) {
+      id
+      protocol
+      domain
+      resource
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createProtocol = /* GraphQL */ `
+  mutation CreateProtocol(
+    $input: CreateProtocolInput!
+    $condition: ModelProtocolConditionInput
+  ) {
+    createProtocol(input: $input, condition: $condition) {
+      id
+      name
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateProtocol = /* GraphQL */ `
+  mutation UpdateProtocol(
+    $input: UpdateProtocolInput!
+    $condition: ModelProtocolConditionInput
+  ) {
+    updateProtocol(input: $input, condition: $condition) {
+      id
+      name
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteProtocol = /* GraphQL */ `
+  mutation DeleteProtocol(
+    $input: DeleteProtocolInput!
+    $condition: ModelProtocolConditionInput
+  ) {
+    deleteProtocol(input: $input, condition: $condition) {
+      id
+      name
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createAppLink = /* GraphQL */ `
   mutation CreateAppLink(
     $input: CreateAppLinkInput!
@@ -73,7 +178,6 @@ export const createAppLink = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       posts {
         nextToken
         startedAt
@@ -96,7 +200,6 @@ export const updateAppLink = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       posts {
         nextToken
         startedAt
@@ -119,7 +222,6 @@ export const deleteAppLink = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       posts {
         nextToken
         startedAt

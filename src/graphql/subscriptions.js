@@ -49,6 +49,93 @@ export const onDeleteTask = /* GraphQL */ `
     }
   }
 `;
+export const onCreateSuggestedAppLink = /* GraphQL */ `
+  subscription OnCreateSuggestedAppLink($owner: String) {
+    onCreateSuggestedAppLink(owner: $owner) {
+      id
+      protocol
+      domain
+      resource
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateSuggestedAppLink = /* GraphQL */ `
+  subscription OnUpdateSuggestedAppLink($owner: String) {
+    onUpdateSuggestedAppLink(owner: $owner) {
+      id
+      protocol
+      domain
+      resource
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteSuggestedAppLink = /* GraphQL */ `
+  subscription OnDeleteSuggestedAppLink($owner: String) {
+    onDeleteSuggestedAppLink(owner: $owner) {
+      id
+      protocol
+      domain
+      resource
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateProtocol = /* GraphQL */ `
+  subscription OnCreateProtocol {
+    onCreateProtocol {
+      id
+      name
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateProtocol = /* GraphQL */ `
+  subscription OnUpdateProtocol {
+    onUpdateProtocol {
+      id
+      name
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteProtocol = /* GraphQL */ `
+  subscription OnDeleteProtocol {
+    onDeleteProtocol {
+      id
+      name
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateAppLink = /* GraphQL */ `
   subscription OnCreateAppLink {
     onCreateAppLink {
@@ -61,7 +148,6 @@ export const onCreateAppLink = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       posts {
         nextToken
         startedAt
@@ -81,7 +167,6 @@ export const onUpdateAppLink = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       posts {
         nextToken
         startedAt
@@ -101,7 +186,6 @@ export const onDeleteAppLink = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       posts {
         nextToken
         startedAt

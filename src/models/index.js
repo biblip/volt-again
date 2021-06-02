@@ -4,10 +4,12 @@ import { schema } from './schema';
 
 
 
-const { Task, AppLink, Post, Comment } = initSchema(schema);
+const { Task, SuggestedAppLink, Protocol, AppLink, Post, Comment } = initSchema(schema);
 
 export {
   Task,
+  SuggestedAppLink,
+  Protocol,
   AppLink,
   Post,
   Comment

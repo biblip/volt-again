@@ -71,6 +71,141 @@ export const syncTasks = /* GraphQL */ `
     }
   }
 `;
+export const getSuggestedAppLink = /* GraphQL */ `
+  query GetSuggestedAppLink($id: ID!) {
+    getSuggestedAppLink(id: $id) {
+      id
+      protocol
+      domain
+      resource
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listSuggestedAppLinks = /* GraphQL */ `
+  query ListSuggestedAppLinks(
+    $filter: ModelSuggestedAppLinkFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSuggestedAppLinks(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        protocol
+        domain
+        resource
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncSuggestedAppLinks = /* GraphQL */ `
+  query SyncSuggestedAppLinks(
+    $filter: ModelSuggestedAppLinkFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncSuggestedAppLinks(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        protocol
+        domain
+        resource
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getProtocol = /* GraphQL */ `
+  query GetProtocol($id: ID!) {
+    getProtocol(id: $id) {
+      id
+      name
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listProtocols = /* GraphQL */ `
+  query ListProtocols(
+    $filter: ModelProtocolFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listProtocols(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncProtocols = /* GraphQL */ `
+  query SyncProtocols(
+    $filter: ModelProtocolFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncProtocols(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        name
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const getAppLink = /* GraphQL */ `
   query GetAppLink($id: ID!) {
     getAppLink(id: $id) {
@@ -83,7 +218,6 @@ export const getAppLink = /* GraphQL */ `
       _lastChangedAt
       createdAt
       updatedAt
-      owner
       posts {
         nextToken
         startedAt
@@ -108,7 +242,6 @@ export const listAppLinks = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt
@@ -140,7 +273,6 @@ export const searchAppLinks = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       nextToken
       total
@@ -170,7 +302,6 @@ export const syncAppLinks = /* GraphQL */ `
         _lastChangedAt
         createdAt
         updatedAt
-        owner
       }
       nextToken
       startedAt
