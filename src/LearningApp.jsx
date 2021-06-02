@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { AuthModeStrategyType, DataStore, Predicates } from "@aws-amplify/datastore";
 import { Task } from './models';
-import { Button, Card, CardActions, CardContent, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import awsConfig from './aws-exports';

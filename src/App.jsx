@@ -1,15 +1,13 @@
 //@ts-check
 
 import React, { useEffect, useState } from 'react'
-import { AuthModeStrategyType, DataStore, Predicates } from "@aws-amplify/datastore";
-import { Task } from './models';
-import { Button, Card, CardActions, CardContent, makeStyles, withStyles } from '@material-ui/core';
+import { AuthModeStrategyType } from "@aws-amplify/datastore";
+import { Button, Card, CardActions, CardContent, makeStyles } from '@material-ui/core';
 
 import awsConfig from './aws-exports';
 import Amplify, { Hub } from '@aws-amplify/core';
 import Auth from '@aws-amplify/auth';
 
-import DeleteIcon from '@material-ui/icons/Delete';
 import SearchBar from './SearchBar';
 
 Amplify.configure({
@@ -131,10 +129,6 @@ function App(props) {
 
     useEffect(() => {
         AssessLoggedInState();
-        // const subscription = DataStore.observe(Task).subscribe((msg) => {
-        //     getTasks();
-        // });
-        // getTasks();
         Hub.listen('auth', hubAuth)
         return () => {
             Hub.remove('auth', hubAuth);
