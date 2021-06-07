@@ -224,7 +224,7 @@ function App(props) {
                         {/* <Button variant="outlined" onClick={() => signIn("admin1@cuplease.com","mmmm3333")}>Sign In admin 1</Button> */}
                     </div>
                 }
-                <Button onClick={clearDataStore}>Data errors, Press here</Button>
+                <Button onClick={clearDataStore}>Data errors?, Press here</Button>
             </CardActions>
             <CardContent>
                 <AddSuggestedAppLink query={query}></AddSuggestedAppLink>
