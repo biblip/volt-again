@@ -2,17 +2,15 @@
 
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, TextField, InputAdornment, ClickAwayListener, Grid, Link } from '@material-ui/core';
+import { Typography, TextField, InputAdornment, Grid } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import CloseIcon from '@material-ui/icons/Close';
 import { useEffect } from 'react';
 
 import AddLocationIcon from '@material-ui/icons/AddLocation';
 import LocationOffIcon from '@material-ui/icons/LocationOff';
-import SelectZoneList from './SelectZoneList';
-import SelectRegionOrCity from './SelectRegionOrCity';
+import AddSuggestedAppLink from './AddSuggestedAppLink';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -98,7 +96,6 @@ var query;
 
 function SearchBar(props) {
     const [location, setLocation] = useState(props.location);
-    const [zones, setZones] = useState(props.zones);
     const [emptyQuery, setEmptyQuery] = useState(true);
     const [openZoneSelector, setOpenZoneSelector] = useState(false);
     const classes = useStyles();
@@ -113,31 +110,17 @@ function SearchBar(props) {
     }, [props.location]);
 
     useEffect(() => {
-        setZones(props.zones);
-    }, [props.zones]);
-
-    useEffect(() => {
-        query = props.query;
-        checkEmptyQuery(query);
+        checkEmptyQuery(props.query);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.query]);
-
-    let theme = createMuiTheme();
-    theme = responsiveFontSizes(theme);
 
     function onClickAddLocation(e) {
         setOpenZoneSelector(!openZoneSelector);
     }
 
-    const handleDelete = (deleteZone) => {
-        var newZones = zones.filter((zone) => zone != deleteZone);
-        if (props.onChangeZones) {
-            props.onChangeZones(newZones);
-        }
-    };
-
     function onKeyUp(e) {
         if (e.key === 'Enter' && props.doSearch) {
-            if (query.trim() != '') {
+            if (query.trim() !== '') {
                 props.doSearch(query);
             }
         }
@@ -145,7 +128,7 @@ function SearchBar(props) {
 
     function onClickSearch(e) {
         if (props.doSearch) {
-            if (query.trim() != '') {
+            if (query.trim() !== '') {
                 props.doSearch(query);
             }
         }
@@ -168,15 +151,10 @@ function SearchBar(props) {
         }
     }
 
-    let searchArea = 'local';
-    if (location) {
-        searchArea = location.region?location.region.name:searchArea;
-        searchArea = location.subregion?location.subregion.name:searchArea;
-        searchArea = location.city?location.city.name:searchArea;
+    function getTralato(a) {
+        return a;
     }
-function getTralato(a) {
-    return a;
-}
+
     return (
         <Grid container direction='row' alignItems='center'>
                 <Grid item className={`${classes.searchBar} ${openZoneSelector ? classes.searchBarOpen : null}`}>
@@ -236,7 +214,7 @@ function getTralato(a) {
                     {
                         openZoneSelector &&
                         <Grid item>
-                            <ClickAwayListener onClickAway={(e) => { e.preventDefault(); setOpenZoneSelector(false); }}>
+                            {/* <ClickAwayListener onClickAway={(e) => { e.preventDefault(); setOpenZoneSelector(false); }}> */}
                                 {
                                     (() => {
                                         if (location == null) {
@@ -254,7 +232,8 @@ function getTralato(a) {
                                                         </Grid>
                                                     </Grid>
                                                     <Grid item>
-                                                        <SelectRegionOrCity onChangeLocation={props.onChangeLocation} />
+                                                        {/* <SelectRegionOrCity onChangeLocation={props.onChangeLocation} /> */}
+                                                        <AddSuggestedAppLink query={query}></AddSuggestedAppLink>
                                                     </Grid>
                                                 </Grid>                                                
                                             </Grid>
@@ -273,6 +252,7 @@ function getTralato(a) {
                                                                 <Grid container alignContent='flex-end' direction='row-reverse'>
                                                                     {
                                                                         location &&
+                                                                        // eslint-disable-next-line jsx-a11y/anchor-is-valid
                                                                         <a href='#' onClick={(e) => { e.preventDefault(); props.onChangeLocation(null); setOpenZoneSelector(false); }}>
                                                                             <LocationOffIcon fontSize='small' />
                                                                         </a>
@@ -282,14 +262,14 @@ function getTralato(a) {
                                                         </Grid>
                                                     </Grid>
                                                     <Grid item>
-                                                        <SelectZoneList location={location} zones={zones} onChangeLocation={props.onChangeLocation} onChangeZones={props.onChangeZones} onDone={() => setOpenZoneSelector(false)} />
+                                                        {/* <SelectZoneList location={location} zones={zones} onChangeLocation={props.onChangeLocation} onChangeZones={props.onChangeZones} onDone={() => setOpenZoneSelector(false)} /> */}
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
                                         }
                                     })()
                                 }
-                            </ClickAwayListener>
+                            {/* </ClickAwayListener> */}
                         </Grid>
                     }
                     </Grid>
@@ -299,10 +279,10 @@ function getTralato(a) {
 }
 
 SearchBar.propTypes = {
-    location: PropTypes.object,
-    zones: PropTypes.array.isRequired,
-    onChangeLocation: PropTypes.func.isRequired,
-    onChangeZones: PropTypes.func.isRequired,
+    // location: PropTypes.object,
+    // zones: PropTypes.array.isRequired,
+    // onChangeLocation: PropTypes.func.isRequired,
+    // onChangeZones: PropTypes.func.isRequired,
     query: PropTypes.string,
     doSearch: PropTypes.func.isRequired,
 }

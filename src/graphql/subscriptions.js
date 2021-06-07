@@ -53,9 +53,9 @@ export const onCreateSuggestedAppLink = /* GraphQL */ `
   subscription OnCreateSuggestedAppLink($owner: String) {
     onCreateSuggestedAppLink(owner: $owner) {
       id
-      protocol
-      domain
-      resource
+      category
+      link
+      description
       _version
       _deleted
       _lastChangedAt
@@ -69,9 +69,9 @@ export const onUpdateSuggestedAppLink = /* GraphQL */ `
   subscription OnUpdateSuggestedAppLink($owner: String) {
     onUpdateSuggestedAppLink(owner: $owner) {
       id
-      protocol
-      domain
-      resource
+      category
+      link
+      description
       _version
       _deleted
       _lastChangedAt
@@ -85,9 +85,9 @@ export const onDeleteSuggestedAppLink = /* GraphQL */ `
   subscription OnDeleteSuggestedAppLink($owner: String) {
     onDeleteSuggestedAppLink(owner: $owner) {
       id
-      protocol
-      domain
-      resource
+      category
+      link
+      description
       _version
       _deleted
       _lastChangedAt
@@ -97,11 +97,13 @@ export const onDeleteSuggestedAppLink = /* GraphQL */ `
     }
   }
 `;
-export const onCreateProtocol = /* GraphQL */ `
-  subscription OnCreateProtocol {
-    onCreateProtocol {
+export const onCreateCategory = /* GraphQL */ `
+  subscription OnCreateCategory {
+    onCreateCategory {
       id
+      shortName
       name
+      manifest
       _version
       _deleted
       _lastChangedAt
@@ -110,11 +112,13 @@ export const onCreateProtocol = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateProtocol = /* GraphQL */ `
-  subscription OnUpdateProtocol {
-    onUpdateProtocol {
+export const onUpdateCategory = /* GraphQL */ `
+  subscription OnUpdateCategory {
+    onUpdateCategory {
       id
+      shortName
       name
+      manifest
       _version
       _deleted
       _lastChangedAt
@@ -123,11 +127,13 @@ export const onUpdateProtocol = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteProtocol = /* GraphQL */ `
-  subscription OnDeleteProtocol {
-    onDeleteProtocol {
+export const onDeleteCategory = /* GraphQL */ `
+  subscription OnDeleteCategory {
+    onDeleteCategory {
       id
+      shortName
       name
+      manifest
       _version
       _deleted
       _lastChangedAt
@@ -140,18 +146,17 @@ export const onCreateAppLink = /* GraphQL */ `
   subscription OnCreateAppLink {
     onCreateAppLink {
       id
-      protocol
       domain
+      path
       resource
+      manifest
+      categoryID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      posts {
-        nextToken
-        startedAt
-      }
+      owner
     }
   }
 `;
@@ -159,18 +164,17 @@ export const onUpdateAppLink = /* GraphQL */ `
   subscription OnUpdateAppLink {
     onUpdateAppLink {
       id
-      protocol
       domain
+      path
       resource
+      manifest
+      categoryID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      posts {
-        nextToken
-        startedAt
-      }
+      owner
     }
   }
 `;
@@ -178,18 +182,17 @@ export const onDeleteAppLink = /* GraphQL */ `
   subscription OnDeleteAppLink {
     onDeleteAppLink {
       id
-      protocol
       domain
+      path
       resource
+      manifest
+      categoryID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      posts {
-        nextToken
-        startedAt
-      }
+      owner
     }
   }
 `;
@@ -200,17 +203,13 @@ export const onCreatePost = /* GraphQL */ `
       title
       content
       status
-      applinkID
+      appLinkID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
-      comments {
-        nextToken
-        startedAt
-      }
     }
   }
 `;
@@ -221,17 +220,13 @@ export const onUpdatePost = /* GraphQL */ `
       title
       content
       status
-      applinkID
+      appLinkID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
-      comments {
-        nextToken
-        startedAt
-      }
     }
   }
 `;
@@ -242,17 +237,13 @@ export const onDeletePost = /* GraphQL */ `
       title
       content
       status
-      applinkID
+      appLinkID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
-      comments {
-        nextToken
-        startedAt
-      }
     }
   }
 `;
@@ -295,6 +286,54 @@ export const onDeleteComment = /* GraphQL */ `
       content
       status
       postID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateSingleComment = /* GraphQL */ `
+  subscription OnCreateSingleComment {
+    onCreateSingleComment {
+      id
+      content
+      status
+      appLinkID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateSingleComment = /* GraphQL */ `
+  subscription OnUpdateSingleComment {
+    onUpdateSingleComment {
+      id
+      content
+      status
+      appLinkID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteSingleComment = /* GraphQL */ `
+  subscription OnDeleteSingleComment {
+    onDeleteSingleComment {
+      id
+      content
+      status
+      appLinkID
       _version
       _deleted
       _lastChangedAt

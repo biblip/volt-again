@@ -65,9 +65,9 @@ export const createSuggestedAppLink = /* GraphQL */ `
   ) {
     createSuggestedAppLink(input: $input, condition: $condition) {
       id
-      protocol
-      domain
-      resource
+      category
+      link
+      description
       _version
       _deleted
       _lastChangedAt
@@ -84,9 +84,9 @@ export const updateSuggestedAppLink = /* GraphQL */ `
   ) {
     updateSuggestedAppLink(input: $input, condition: $condition) {
       id
-      protocol
-      domain
-      resource
+      category
+      link
+      description
       _version
       _deleted
       _lastChangedAt
@@ -103,9 +103,9 @@ export const deleteSuggestedAppLink = /* GraphQL */ `
   ) {
     deleteSuggestedAppLink(input: $input, condition: $condition) {
       id
-      protocol
-      domain
-      resource
+      category
+      link
+      description
       _version
       _deleted
       _lastChangedAt
@@ -115,14 +115,16 @@ export const deleteSuggestedAppLink = /* GraphQL */ `
     }
   }
 `;
-export const createProtocol = /* GraphQL */ `
-  mutation CreateProtocol(
-    $input: CreateProtocolInput!
-    $condition: ModelProtocolConditionInput
+export const createCategory = /* GraphQL */ `
+  mutation CreateCategory(
+    $input: CreateCategoryInput!
+    $condition: ModelCategoryConditionInput
   ) {
-    createProtocol(input: $input, condition: $condition) {
+    createCategory(input: $input, condition: $condition) {
       id
+      shortName
       name
+      manifest
       _version
       _deleted
       _lastChangedAt
@@ -131,14 +133,16 @@ export const createProtocol = /* GraphQL */ `
     }
   }
 `;
-export const updateProtocol = /* GraphQL */ `
-  mutation UpdateProtocol(
-    $input: UpdateProtocolInput!
-    $condition: ModelProtocolConditionInput
+export const updateCategory = /* GraphQL */ `
+  mutation UpdateCategory(
+    $input: UpdateCategoryInput!
+    $condition: ModelCategoryConditionInput
   ) {
-    updateProtocol(input: $input, condition: $condition) {
+    updateCategory(input: $input, condition: $condition) {
       id
+      shortName
       name
+      manifest
       _version
       _deleted
       _lastChangedAt
@@ -147,14 +151,16 @@ export const updateProtocol = /* GraphQL */ `
     }
   }
 `;
-export const deleteProtocol = /* GraphQL */ `
-  mutation DeleteProtocol(
-    $input: DeleteProtocolInput!
-    $condition: ModelProtocolConditionInput
+export const deleteCategory = /* GraphQL */ `
+  mutation DeleteCategory(
+    $input: DeleteCategoryInput!
+    $condition: ModelCategoryConditionInput
   ) {
-    deleteProtocol(input: $input, condition: $condition) {
+    deleteCategory(input: $input, condition: $condition) {
       id
+      shortName
       name
+      manifest
       _version
       _deleted
       _lastChangedAt
@@ -170,18 +176,17 @@ export const createAppLink = /* GraphQL */ `
   ) {
     createAppLink(input: $input, condition: $condition) {
       id
-      protocol
       domain
+      path
       resource
+      manifest
+      categoryID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      posts {
-        nextToken
-        startedAt
-      }
+      owner
     }
   }
 `;
@@ -192,18 +197,17 @@ export const updateAppLink = /* GraphQL */ `
   ) {
     updateAppLink(input: $input, condition: $condition) {
       id
-      protocol
       domain
+      path
       resource
+      manifest
+      categoryID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      posts {
-        nextToken
-        startedAt
-      }
+      owner
     }
   }
 `;
@@ -214,18 +218,17 @@ export const deleteAppLink = /* GraphQL */ `
   ) {
     deleteAppLink(input: $input, condition: $condition) {
       id
-      protocol
       domain
+      path
       resource
+      manifest
+      categoryID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      posts {
-        nextToken
-        startedAt
-      }
+      owner
     }
   }
 `;
@@ -239,17 +242,13 @@ export const createPost = /* GraphQL */ `
       title
       content
       status
-      applinkID
+      appLinkID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
-      comments {
-        nextToken
-        startedAt
-      }
     }
   }
 `;
@@ -263,17 +262,13 @@ export const updatePost = /* GraphQL */ `
       title
       content
       status
-      applinkID
+      appLinkID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
-      comments {
-        nextToken
-        startedAt
-      }
     }
   }
 `;
@@ -287,17 +282,13 @@ export const deletePost = /* GraphQL */ `
       title
       content
       status
-      applinkID
+      appLinkID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
-      comments {
-        nextToken
-        startedAt
-      }
     }
   }
 `;
@@ -349,6 +340,63 @@ export const deleteComment = /* GraphQL */ `
       content
       status
       postID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createSingleComment = /* GraphQL */ `
+  mutation CreateSingleComment(
+    $input: CreateSingleCommentInput!
+    $condition: ModelSingleCommentConditionInput
+  ) {
+    createSingleComment(input: $input, condition: $condition) {
+      id
+      content
+      status
+      appLinkID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateSingleComment = /* GraphQL */ `
+  mutation UpdateSingleComment(
+    $input: UpdateSingleCommentInput!
+    $condition: ModelSingleCommentConditionInput
+  ) {
+    updateSingleComment(input: $input, condition: $condition) {
+      id
+      content
+      status
+      appLinkID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteSingleComment = /* GraphQL */ `
+  mutation DeleteSingleComment(
+    $input: DeleteSingleCommentInput!
+    $condition: ModelSingleCommentConditionInput
+  ) {
+    deleteSingleComment(input: $input, condition: $condition) {
+      id
+      content
+      status
+      appLinkID
       _version
       _deleted
       _lastChangedAt

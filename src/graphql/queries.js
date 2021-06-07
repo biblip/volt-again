@@ -75,9 +75,9 @@ export const getSuggestedAppLink = /* GraphQL */ `
   query GetSuggestedAppLink($id: ID!) {
     getSuggestedAppLink(id: $id) {
       id
-      protocol
-      domain
-      resource
+      category
+      link
+      description
       _version
       _deleted
       _lastChangedAt
@@ -100,9 +100,9 @@ export const listSuggestedAppLinks = /* GraphQL */ `
     ) {
       items {
         id
-        protocol
-        domain
-        resource
+        category
+        link
+        description
         _version
         _deleted
         _lastChangedAt
@@ -130,9 +130,9 @@ export const syncSuggestedAppLinks = /* GraphQL */ `
     ) {
       items {
         id
-        protocol
-        domain
-        resource
+        category
+        link
+        description
         _version
         _deleted
         _lastChangedAt
@@ -145,11 +145,13 @@ export const syncSuggestedAppLinks = /* GraphQL */ `
     }
   }
 `;
-export const getProtocol = /* GraphQL */ `
-  query GetProtocol($id: ID!) {
-    getProtocol(id: $id) {
+export const getCategory = /* GraphQL */ `
+  query GetCategory($id: ID!) {
+    getCategory(id: $id) {
       id
+      shortName
       name
+      manifest
       _version
       _deleted
       _lastChangedAt
@@ -158,16 +160,18 @@ export const getProtocol = /* GraphQL */ `
     }
   }
 `;
-export const listProtocols = /* GraphQL */ `
-  query ListProtocols(
-    $filter: ModelProtocolFilterInput
+export const listCategorys = /* GraphQL */ `
+  query ListCategorys(
+    $filter: ModelCategoryFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listProtocols(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listCategorys(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        shortName
         name
+        manifest
         _version
         _deleted
         _lastChangedAt
@@ -179,14 +183,14 @@ export const listProtocols = /* GraphQL */ `
     }
   }
 `;
-export const syncProtocols = /* GraphQL */ `
-  query SyncProtocols(
-    $filter: ModelProtocolFilterInput
+export const syncCategories = /* GraphQL */ `
+  query SyncCategories(
+    $filter: ModelCategoryFilterInput
     $limit: Int
     $nextToken: String
     $lastSync: AWSTimestamp
   ) {
-    syncProtocols(
+    syncCategories(
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -194,7 +198,9 @@ export const syncProtocols = /* GraphQL */ `
     ) {
       items {
         id
+        shortName
         name
+        manifest
         _version
         _deleted
         _lastChangedAt
@@ -210,18 +216,17 @@ export const getAppLink = /* GraphQL */ `
   query GetAppLink($id: ID!) {
     getAppLink(id: $id) {
       id
-      protocol
       domain
+      path
       resource
+      manifest
+      categoryID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
-      posts {
-        nextToken
-        startedAt
-      }
+      owner
     }
   }
 `;
@@ -234,14 +239,17 @@ export const listAppLinks = /* GraphQL */ `
     listAppLinks(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        protocol
         domain
+        path
         resource
+        manifest
+        categoryID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
+        owner
       }
       nextToken
       startedAt
@@ -265,14 +273,17 @@ export const searchAppLinks = /* GraphQL */ `
     ) {
       items {
         id
-        protocol
         domain
+        path
         resource
+        manifest
+        categoryID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
+        owner
       }
       nextToken
       total
@@ -294,14 +305,17 @@ export const syncAppLinks = /* GraphQL */ `
     ) {
       items {
         id
-        protocol
         domain
+        path
         resource
+        manifest
+        categoryID
         _version
         _deleted
         _lastChangedAt
         createdAt
         updatedAt
+        owner
       }
       nextToken
       startedAt
@@ -315,17 +329,13 @@ export const getPost = /* GraphQL */ `
       title
       content
       status
-      applinkID
+      appLinkID
       _version
       _deleted
       _lastChangedAt
       createdAt
       updatedAt
       owner
-      comments {
-        nextToken
-        startedAt
-      }
     }
   }
 `;
@@ -341,7 +351,7 @@ export const listPosts = /* GraphQL */ `
         title
         content
         status
-        applinkID
+        appLinkID
         _version
         _deleted
         _lastChangedAt
@@ -372,7 +382,7 @@ export const syncPosts = /* GraphQL */ `
         title
         content
         status
-        applinkID
+        appLinkID
         _version
         _deleted
         _lastChangedAt
@@ -443,6 +453,76 @@ export const syncComments = /* GraphQL */ `
         content
         status
         postID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getSingleComment = /* GraphQL */ `
+  query GetSingleComment($id: ID!) {
+    getSingleComment(id: $id) {
+      id
+      content
+      status
+      appLinkID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listSingleComments = /* GraphQL */ `
+  query ListSingleComments(
+    $filter: ModelSingleCommentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSingleComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        content
+        status
+        appLinkID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncSingleComments = /* GraphQL */ `
+  query SyncSingleComments(
+    $filter: ModelSingleCommentFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncSingleComments(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        content
+        status
+        appLinkID
         _version
         _deleted
         _lastChangedAt

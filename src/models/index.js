@@ -2,15 +2,30 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema';
 
+const PostStatus = {
+  "VISIBLE": "VISIBLE",
+  "HIDDEN": "HIDDEN",
+  "DELETED": "DELETED",
+  "SANCTIONED": "SANCTIONED"
+};
 
+const CommentStatus = {
+  "VISIBLE": "VISIBLE",
+  "HIDDEN": "HIDDEN",
+  "DELETED": "DELETED",
+  "SANCTIONED": "SANCTIONED"
+};
 
-const { Task, SuggestedAppLink, Protocol, AppLink, Post, Comment } = initSchema(schema);
+const { Task, SuggestedAppLink, Category, AppLink, Post, Comment, SingleComment } = initSchema(schema);
 
 export {
   Task,
   SuggestedAppLink,
-  Protocol,
+  Category,
   AppLink,
   Post,
-  Comment
+  Comment,
+  SingleComment,
+  PostStatus,
+  CommentStatus
 };

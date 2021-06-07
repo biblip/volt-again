@@ -99,22 +99,22 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "protocol": {
-                    "name": "protocol",
+                "category": {
+                    "name": "category",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
                 },
-                "domain": {
-                    "name": "domain",
+                "link": {
+                    "name": "link",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
                 },
-                "resource": {
-                    "name": "resource",
+                "description": {
+                    "name": "description",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -179,8 +179,8 @@ export const schema = {
                 }
             ]
         },
-        "Protocol": {
-            "name": "Protocol",
+        "Category": {
+            "name": "Category",
             "fields": {
                 "id": {
                     "name": "id",
@@ -189,10 +189,24 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "shortName": {
+                    "name": "shortName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "name": {
                     "name": "name",
                     "isArray": false,
                     "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "manifest": {
+                    "name": "manifest",
+                    "isArray": false,
+                    "type": "AWSJSON",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -214,7 +228,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "Protocols",
+            "pluralName": "Categories",
             "attributes": [
                 {
                     "type": "model",
@@ -266,18 +280,18 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "protocol": {
-                    "name": "protocol",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
                 "domain": {
                     "name": "domain",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
+                    "attributes": []
+                },
+                "path": {
+                    "name": "path",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "resource": {
@@ -287,19 +301,19 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "posts": {
-                    "name": "posts",
-                    "isArray": true,
-                    "type": {
-                        "model": "Post"
-                    },
+                "manifest": {
+                    "name": "manifest",
+                    "isArray": false,
+                    "type": "AWSJSON",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "categoryID": {
+                    "name": "categoryID",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "applinkID"
-                    }
+                    "attributes": []
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -359,6 +373,17 @@ export const schema = {
                                     "delete",
                                     "read"
                                 ]
+                            },
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "read"
+                                ],
+                                "identityClaim": "cognito:username"
                             }
                         ]
                     }
@@ -392,28 +417,16 @@ export const schema = {
                 "status": {
                     "name": "status",
                     "isArray": false,
-                    "type": "String",
+                    "type": {
+                        "enum": "PostStatus"
+                    },
                     "isRequired": false,
                     "attributes": []
                 },
-                "comments": {
-                    "name": "comments",
-                    "isArray": true,
-                    "type": {
-                        "model": "Comment"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "postID"
-                    }
-                },
-                "applinkID": {
-                    "name": "applinkID",
+                "appLinkID": {
+                    "name": "appLinkID",
                     "isArray": false,
-                    "type": "ID",
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -440,15 +453,6 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byAppLink",
-                        "fields": [
-                            "applinkID"
-                        ]
-                    }
                 },
                 {
                     "type": "auth",
@@ -524,7 +528,7 @@ export const schema = {
                 "postID": {
                     "name": "postID",
                     "isArray": false,
-                    "type": "ID",
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -553,13 +557,108 @@ export const schema = {
                     "properties": {}
                 },
                 {
-                    "type": "key",
+                    "type": "auth",
                     "properties": {
-                        "name": "byPost",
-                        "fields": [
-                            "postID"
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "provider": "iam",
+                                "operations": [
+                                    "read"
+                                ]
+                            },
+                            {
+                                "allow": "private",
+                                "operations": [
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            },
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "read"
+                                ],
+                                "identityClaim": "cognito:username"
+                            }
                         ]
                     }
+                }
+            ]
+        },
+        "SingleComment": {
+            "name": "SingleComment",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "content": {
+                    "name": "content",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "status": {
+                    "name": "status",
+                    "isArray": false,
+                    "type": {
+                        "enum": "CommentStatus"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "appLinkID": {
+                    "name": "appLinkID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "SingleComments",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
                 },
                 {
                     "type": "auth",
@@ -609,7 +708,26 @@ export const schema = {
             ]
         }
     },
-    "enums": {},
+    "enums": {
+        "PostStatus": {
+            "name": "PostStatus",
+            "values": [
+                "VISIBLE",
+                "HIDDEN",
+                "DELETED",
+                "SANCTIONED"
+            ]
+        },
+        "CommentStatus": {
+            "name": "CommentStatus",
+            "values": [
+                "VISIBLE",
+                "HIDDEN",
+                "DELETED",
+                "SANCTIONED"
+            ]
+        }
+    },
     "nonModels": {},
-    "version": "91d4bfcf95e027db788edbfa20909b99"
+    "version": "36e2ea38cbd12a7cf01811b4f1945da3"
 };

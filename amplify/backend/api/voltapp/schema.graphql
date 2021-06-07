@@ -1,86 +1,66 @@
-type Task
-    @model
-    @auth(rules: [
-            { allow: public, provider: iam, operations: [read] },
-            { allow: private, operations: [read] },
-            { allow: owner, operations: [create, update, delete, read] }
-        ]
-    ) {
-        id: ID!
-        title: String!
-        description: String
-        status: String
-    }
+enum PostStatus {
+  VISIBLE
+  HIDDEN
+  DELETED
+  SANCTIONED
+}
 
-type SuggestedAppLink
-    @model
-    @auth(rules: [
-            { allow: groups, groups: ["Admin"] },
-            { allow: owner, operations: [create, update, delete, read] }
-        ]
-    ) {
-        id: ID!
-        protocol: String!
-        domain: String!
-        resource: String
-    }
+enum CommentStatus {
+  VISIBLE
+  HIDDEN
+  DELETED
+  SANCTIONED
+}
 
-type Protocol
-    @model
-    @auth(rules: [
-            { allow: public, provider: iam, operations: [read] },
-            { allow: private, operations: [read] },
-            { allow: groups, groups: ["Admin"] }
-        ]
-    ) {
-        id: ID!
-        name: String!
-    }
+type Task @model @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: owner, operations: [create, update, delete, read]}]) {
+  id: ID!
+  title: String!
+  description: String
+  status: String
+}
 
-type AppLink
-    @model
-    @searchable
-    @auth(rules: [
-            { allow: public, provider: iam, operations: [read] },
-            { allow: private, operations: [read] },
-            { allow: groups, groups: ["Admin"] }
-        ]
-    ) {
-        id: ID!
-        protocol: String!
-        domain: String!
-        resource: String
-        posts: [Post] @connection(keyName: "byAppLink", fields: ["id"])
-    }
+type SuggestedAppLink @model @auth(rules: [{allow: groups, groups: ["Admin"]}, {allow: owner, operations: [create, update, delete, read]}]) {
+  id: ID!
+  category: String!
+  link: String!
+  description: String
+}
 
-type Post
-    @model
-    @auth(rules: [
-            { allow: public, provider: iam, operations: [read] },
-            { allow: private, operations: [read] },
-            { allow: groups, groups: ["Admin"] },
-            { allow: owner, operations: [create, update, read] }
-        ]
-    ) @key(name: "byAppLink", fields: ["applinkID"]) {
-        id: ID!
-        title: String!
-        content: String!
-        status: String
-        comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
-        applinkID: ID
-    }
+type Category @model @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}]) {
+  id: ID!
+  shortName: String!
+  name: String!
+  manifest: AWSJSON!
+}
 
-type Comment
-    @model
-    @auth(rules: [
-            { allow: public, provider: iam, operations: [read] },
-            { allow: private, operations: [read] },
-            { allow: groups, groups: ["Admin"] },
-            { allow: owner, operations: [create, update, read] }
-        ]
-    ) @key(name: "byPost", fields: ["postID"]) {
-        id: ID!
-        content: String!
-        status: String
-        postID: ID
-    } 
+type AppLink @model @searchable @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}, {allow: owner, operations: [create, update, read]}]) {
+  id: ID!
+  domain: String!
+  path: String
+  resource: String
+  manifest: AWSJSON!
+  categoryID: String
+}
+
+type Post @model @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}, {allow: owner, operations: [create, update, read]}]) {
+  id: ID!
+  title: String!
+  content: String!
+  status: PostStatus
+  appLinkID: String
+}
+
+type Comment @model @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}, {allow: owner, operations: [create, update, read]}]) {
+  id: ID!
+  content: String!
+  status: String
+  postID: String
+}
+
+type SingleComment @model @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}, {allow: owner, operations: [create, update, read]}]) {
+  id: ID!
+  content: String!
+  status: CommentStatus
+  appLinkID: String
+}
+ 
