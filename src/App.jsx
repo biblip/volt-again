@@ -178,9 +178,11 @@ function App(props) {
             await DataStore.save(new Category({"shortName": "nft", "name": "nft", "manifest": "{\"domain\":\"nft id\"}"}));
             await DataStore.save(new Category({"shortName": "mistery", "name": "mistery", "manifest": "{\"domain\":\"name\"}"}));
             await DataStore.save(new Category({"shortName": "artwork", "name": "artwork", "manifest": "{\"domain\":\"name\"}"}));
+            await DataStore.save(new Category({"shortName": "person", "name": "person", "manifest": "{\"domain\":\"name\"}"}));
+            await DataStore.save(new Category({"shortName": "diamond", "name": "diamond", "manifest": "{\"domain\":\"gia or equiv\"}"}));
 
             // person, person, manifest domain: name
-            // diamante
+            // diamond
         }
     }
 
@@ -221,7 +223,7 @@ function App(props) {
                         <Button variant="outlined" onClick={() => signIn("user1@cuplease.com","mmmm3333")}>Sign In user 1</Button>
                         <Button variant="outlined" onClick={() => signIn("user2@cuplease.com","mmmm3333")}>Sign In user 2</Button>
                         <Button variant="outlined" onClick={() => signIn("user3@cuplease.com","mmmm3333")}>Sign In user 3</Button>
-                        <Button variant="outlined" onClick={() => signIn("admin1@cuplease.com","mmmm3333")}>Sign In admin 1</Button>
+                        {/* <Button variant="outlined" onClick={() => signIn("admin1@cuplease.com","mmmm3333")}>Sign In admin 1</Button> */}
                     </div>
                 }
             </CardActions>

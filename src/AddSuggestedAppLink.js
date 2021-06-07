@@ -47,7 +47,9 @@ function AddSuggestedAppLink(props) {
     }, []);
 
     useEffect(() => {
-        getSingleComments();
+        if (categories.length>0) {
+            getSingleComments();
+        }
     }, [currentCategory, currentDomain, currentSection, currentResource]);
 
     async function getDomainSuggestions() {
