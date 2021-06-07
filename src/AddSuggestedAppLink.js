@@ -14,7 +14,13 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         minWidth: 120,
         width: "95%",
-    }
+    },
+    title: {
+        fontSize: 26,
+    },
+    subtitle: {
+        fontSize: 18,
+    },
 }));
 
 function AddSuggestedAppLink(props) {
@@ -230,14 +236,26 @@ function AddSuggestedAppLink(props) {
         });
     }
 
+    function onOpenCategory(e) {
+        if (categories.length===0) {
+            getCategories();
+        }
+    }
+
     return (
         <Grid container direction='column' justify='space-between' spacing={2}>
             <Grid item xs>
+                <Grid container direction='row'>
+                    <Grid>
+                        <Typography className={classes.title} color="textPrimary">Select a category, and write on your favorite thing and connect with people.</Typography>
+                    </Grid>
+                </Grid>
                 <Grid container direction='row'>
                     <Grid item xs={6} md={3}>
                         <FormControl className={classes.margin}>
                             <Autocomplete
                                 options={categories.map((option) => option.name)}
+                                onOpen={onOpenCategory}
                                 clearOnEscape
                                 selectOnFocus
                                 onBlurCapture={handleChange}
@@ -357,6 +375,15 @@ function AddSuggestedAppLink(props) {
                     </Grid> */}
                 </Grid>
             </Grid>
+            {
+                comments && comments.length===0 && <Grid item xs>
+                <Grid container direction='row'>
+                    <Grid item xs={12} md>
+                        <Typography className={classes.subtitle}>Be the first person commenting on this!</Typography>
+                    </Grid>
+                </Grid>
+            </Grid>
+            }
             <Grid item xs>
                 <Grid container direction='row'>
                     <Grid item xs={12} md>
@@ -384,7 +411,7 @@ function AddSuggestedAppLink(props) {
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <FormControl className={classes.margin}>
-                            <Button color="primary" variant="outlined" onClick={addSingleComment}>Add Comment</Button>
+                            <Button color="primary" variant="contained" onClick={addSingleComment}>Add Comment</Button>
                         </FormControl>
                     </Grid>
                 </Grid>

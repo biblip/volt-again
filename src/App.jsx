@@ -115,6 +115,9 @@ const useStyles = makeStyles((theme) => ({
     customBadge: {
         backgroundColor: '#FEFEFE',
         color: "red"
+    },
+    smallnote: {
+        fontSize: 14
     }
 }));
 
@@ -220,7 +223,7 @@ function App(props) {
                         <Button variant="outlined" onClick={() => signIn("user1@cuplease.com","mmmm3333")}>Sign In user 1</Button>
                         <Button variant="outlined" onClick={() => signIn("user2@cuplease.com","mmmm3333")}>Sign In user 2</Button>
                         <Button variant="outlined" onClick={() => signIn("user3@cuplease.com","mmmm3333")}>Sign In user 3</Button>
-                        <Typography>To write comments, you must sign in with one of this users</Typography>
+                        <Typography className={classes.smallnote} color="textSecondary">To write comments, you must sign in with one of this users</Typography>
                         {/* <Button variant="outlined" onClick={() => signIn("admin1@cuplease.com","mmmm3333")}>Sign In admin 1</Button> */}
                     </div>
                 }
