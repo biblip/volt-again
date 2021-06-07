@@ -212,6 +212,77 @@ export const syncCategories = /* GraphQL */ `
     }
   }
 `;
+export const getAppLinkManifest = /* GraphQL */ `
+  query GetAppLinkManifest($id: ID!) {
+    getAppLinkManifest(id: $id) {
+      id
+      domain
+      manifest
+      categoryID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAppLinkManifests = /* GraphQL */ `
+  query ListAppLinkManifests(
+    $filter: ModelAppLinkManifestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAppLinkManifests(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        domain
+        manifest
+        categoryID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncAppLinkManifests = /* GraphQL */ `
+  query SyncAppLinkManifests(
+    $filter: ModelAppLinkManifestFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncAppLinkManifests(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        domain
+        manifest
+        categoryID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const getAppLink = /* GraphQL */ `
   query GetAppLink($id: ID!) {
     getAppLink(id: $id) {
@@ -219,7 +290,6 @@ export const getAppLink = /* GraphQL */ `
       domain
       path
       resource
-      manifest
       categoryID
       _version
       _deleted
@@ -242,7 +312,6 @@ export const listAppLinks = /* GraphQL */ `
         domain
         path
         resource
-        manifest
         categoryID
         _version
         _deleted
@@ -276,7 +345,6 @@ export const searchAppLinks = /* GraphQL */ `
         domain
         path
         resource
-        manifest
         categoryID
         _version
         _deleted
@@ -308,7 +376,6 @@ export const syncAppLinks = /* GraphQL */ `
         domain
         path
         resource
-        manifest
         categoryID
         _version
         _deleted

@@ -169,6 +169,60 @@ export const deleteCategory = /* GraphQL */ `
     }
   }
 `;
+export const createAppLinkManifest = /* GraphQL */ `
+  mutation CreateAppLinkManifest(
+    $input: CreateAppLinkManifestInput!
+    $condition: ModelAppLinkManifestConditionInput
+  ) {
+    createAppLinkManifest(input: $input, condition: $condition) {
+      id
+      domain
+      manifest
+      categoryID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAppLinkManifest = /* GraphQL */ `
+  mutation UpdateAppLinkManifest(
+    $input: UpdateAppLinkManifestInput!
+    $condition: ModelAppLinkManifestConditionInput
+  ) {
+    updateAppLinkManifest(input: $input, condition: $condition) {
+      id
+      domain
+      manifest
+      categoryID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAppLinkManifest = /* GraphQL */ `
+  mutation DeleteAppLinkManifest(
+    $input: DeleteAppLinkManifestInput!
+    $condition: ModelAppLinkManifestConditionInput
+  ) {
+    deleteAppLinkManifest(input: $input, condition: $condition) {
+      id
+      domain
+      manifest
+      categoryID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createAppLink = /* GraphQL */ `
   mutation CreateAppLink(
     $input: CreateAppLinkInput!
@@ -179,7 +233,6 @@ export const createAppLink = /* GraphQL */ `
       domain
       path
       resource
-      manifest
       categoryID
       _version
       _deleted
@@ -200,7 +253,6 @@ export const updateAppLink = /* GraphQL */ `
       domain
       path
       resource
-      manifest
       categoryID
       _version
       _deleted
@@ -221,7 +273,6 @@ export const deleteAppLink = /* GraphQL */ `
       domain
       path
       resource
-      manifest
       categoryID
       _version
       _deleted

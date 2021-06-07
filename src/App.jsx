@@ -2,15 +2,14 @@
 
 import React, { useEffect, useState } from 'react'
 import { AuthModeStrategyType } from "@aws-amplify/datastore";
-import { Button, Card, CardActions, CardContent, makeStyles } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, makeStyles, Typography } from '@material-ui/core';
 
 import awsConfig from './aws-exports';
 import Amplify, { Hub } from '@aws-amplify/core';
 import Auth from '@aws-amplify/auth';
 
-import SearchBar from './SearchBar';
+import AddSuggestedAppLink from './AddSuggestedAppLink';
 import { DataStore } from 'aws-amplify';
-import { Category } from './models';
 
 Amplify.configure({
     ...awsConfig,
@@ -147,44 +146,40 @@ function App(props) {
         })
     }
 
-    function doSearch(query) {
-        console.log("doSearch : " + query);
-    }
+    // async function addProtocols() {
+    //     if (false) {
+    //         await DataStore.save(new Category({"shortName": "website", "name": "website", "manifest": "{\"path\":[\"user\"],\"resource\":\"name\",\"domain\":\"domain\"}"}));
+    //         await DataStore.save(new Category({"shortName": "phone", "name": "phone", "manifest": "{\"domain\":\"phone\"}"}));
+    //         await DataStore.save(new Category({"shortName": "address", "name": "address", "manifest": "{\"domain\":\"address\"}"}));
+    //         await DataStore.save(new Category({"shortName": "licplate", "name": "vehicle plate", "manifest": "{\"domain\":\"licence plate\"}"}));
+    //         await DataStore.save(new Category({"shortName": "movie", "name": "movie", "manifest": "{\"domain\":\"title\"}"}));
+    //         await DataStore.save(new Category({"shortName": "book", "name": "book", "manifest": "{\"domain\":\"title\"}"}));
+    //         await DataStore.save(new Category({"shortName": "song", "name": "song", "manifest": "{\"domain\":\"name\"}"}));
+    //         await DataStore.save(new Category({"shortName": "tv", "name": "tv show", "manifest": "{\"domain\":\"name\"}"}));
+    //         await DataStore.save(new Category({"shortName": "product", "name": "product", "manifest": "{\"domain\":\"name or barcode\"}"}));
+    //         await DataStore.save(new Category({"shortName": "email", "name": "email", "manifest": "{\"domain\":\"email\"}"}));
+    //         await DataStore.save(new Category({"shortName": "game", "name": "game", "manifest": "{\"domain\":\"name\"}"}));
+    //         await DataStore.save(new Category({"shortName": "document", "name": "document", "manifest": "{\"domain\":\"number\"}"}));
+    //         await DataStore.save(new Category({"shortName": "patent", "name": "patent", "manifest": "{\"domain\":\"number\"}"}));
+    //         await DataStore.save(new Category({"shortName": "magazine", "name": "magazine", "manifest": "{\"path\":[\"article\"],\"resource\":\"title\",\"domain\":\"name\"}"}));
+    //         await DataStore.save(new Category({"shortName": "paper", "name": "paper", "manifest": "{\"domain\":\"title\"}"}));
+    //         await DataStore.save(new Category({"shortName": "sport", "name": "sport", "manifest": "{\"domain\":\"name\"}"}));
+    //         await DataStore.save(new Category({"shortName": "cobject", "name": "celestial object", "manifest": "{\"domain\":\"name\"}"}));
+    //         await DataStore.save(new Category({"shortName": "place", "name": "place", "manifest": "{\"domain\":\"name\"}"}));
+    //         await DataStore.save(new Category({"shortName": "trademark", "name": "trademark", "manifest": "{\"domain\":\"trademark\"}"}));
+    //         await DataStore.save(new Category({"shortName": "recipe", "name": "recipe", "manifest": "{\"domain\":\"name\"}"}));
+    //         await DataStore.save(new Category({"shortName": "software", "name": "software", "manifest": "{\"path\":[\"version\"],\"resource\":\"number\",\"domain\":\"name\"}"}));
+    //         await DataStore.save(new Category({"shortName": "wallet", "name": "crypto wallet", "manifest": "{\"domain\":\"wallet\"}"}));
+    //         await DataStore.save(new Category({"shortName": "nft", "name": "nft", "manifest": "{\"domain\":\"nft id\"}"}));
+    //         await DataStore.save(new Category({"shortName": "mistery", "name": "mistery", "manifest": "{\"domain\":\"name\"}"}));
+    //         await DataStore.save(new Category({"shortName": "artwork", "name": "artwork", "manifest": "{\"domain\":\"name\"}"}));
+    //         await DataStore.save(new Category({"shortName": "person", "name": "person", "manifest": "{\"domain\":\"name\"}"}));
+    //         await DataStore.save(new Category({"shortName": "diamond", "name": "diamond", "manifest": "{\"domain\":\"gia or equiv\"}"}));
 
-    async function addProtocols() {
-        if (false) {
-            await DataStore.save(new Category({"shortName": "website", "name": "website", "manifest": "{\"path\":[\"user\"],\"resource\":\"name\",\"domain\":\"domain\"}"}));
-            await DataStore.save(new Category({"shortName": "phone", "name": "phone", "manifest": "{\"domain\":\"phone\"}"}));
-            await DataStore.save(new Category({"shortName": "address", "name": "address", "manifest": "{\"domain\":\"address\"}"}));
-            await DataStore.save(new Category({"shortName": "licplate", "name": "vehicle plate", "manifest": "{\"domain\":\"licence plate\"}"}));
-            await DataStore.save(new Category({"shortName": "movie", "name": "movie", "manifest": "{\"domain\":\"title\"}"}));
-            await DataStore.save(new Category({"shortName": "book", "name": "book", "manifest": "{\"domain\":\"title\"}"}));
-            await DataStore.save(new Category({"shortName": "song", "name": "song", "manifest": "{\"domain\":\"name\"}"}));
-            await DataStore.save(new Category({"shortName": "tv", "name": "tv show", "manifest": "{\"domain\":\"name\"}"}));
-            await DataStore.save(new Category({"shortName": "product", "name": "product", "manifest": "{\"domain\":\"name or barcode\"}"}));
-            await DataStore.save(new Category({"shortName": "email", "name": "email", "manifest": "{\"domain\":\"email\"}"}));
-            await DataStore.save(new Category({"shortName": "game", "name": "game", "manifest": "{\"domain\":\"name\"}"}));
-            await DataStore.save(new Category({"shortName": "document", "name": "document", "manifest": "{\"domain\":\"number\"}"}));
-            await DataStore.save(new Category({"shortName": "patent", "name": "patent", "manifest": "{\"domain\":\"number\"}"}));
-            await DataStore.save(new Category({"shortName": "magazine", "name": "magazine", "manifest": "{\"path\":[\"article\"],\"resource\":\"title\",\"domain\":\"name\"}"}));
-            await DataStore.save(new Category({"shortName": "paper", "name": "paper", "manifest": "{\"domain\":\"title\"}"}));
-            await DataStore.save(new Category({"shortName": "sport", "name": "sport", "manifest": "{\"domain\":\"name\"}"}));
-            await DataStore.save(new Category({"shortName": "cobject", "name": "celestial object", "manifest": "{\"domain\":\"name\"}"}));
-            await DataStore.save(new Category({"shortName": "place", "name": "place", "manifest": "{\"domain\":\"name\"}"}));
-            await DataStore.save(new Category({"shortName": "trademark", "name": "trademark", "manifest": "{\"domain\":\"trademark\"}"}));
-            await DataStore.save(new Category({"shortName": "recipe", "name": "recipe", "manifest": "{\"domain\":\"name\"}"}));
-            await DataStore.save(new Category({"shortName": "software", "name": "software", "manifest": "{\"path\":[\"version\"],\"resource\":\"number\",\"domain\":\"name\"}"}));
-            await DataStore.save(new Category({"shortName": "wallet", "name": "crypto wallet", "manifest": "{\"domain\":\"wallet\"}"}));
-            await DataStore.save(new Category({"shortName": "nft", "name": "nft", "manifest": "{\"domain\":\"nft id\"}"}));
-            await DataStore.save(new Category({"shortName": "mistery", "name": "mistery", "manifest": "{\"domain\":\"name\"}"}));
-            await DataStore.save(new Category({"shortName": "artwork", "name": "artwork", "manifest": "{\"domain\":\"name\"}"}));
-            await DataStore.save(new Category({"shortName": "person", "name": "person", "manifest": "{\"domain\":\"name\"}"}));
-            await DataStore.save(new Category({"shortName": "diamond", "name": "diamond", "manifest": "{\"domain\":\"gia or equiv\"}"}));
-
-            // person, person, manifest domain: name
-            // diamond
-        }
-    }
+    //         // person, person, manifest domain: name
+    //         // diamond
+    //     }
+    // }
 
     const signIn  = async (userName, password) => {
         try {
@@ -205,32 +200,37 @@ function App(props) {
         }
     }
 
+    async function clearDataStore(e) {
+        await DataStore.clear();
+    }
+
     return (
-        <Card>
+        <Card className={classes.box}>
             <CardActions>
-                <Button variant="outlined" >New</Button>
-                <Button variant="outlined" >Delete All</Button>
                 {
                     currentUser ? <div><Button variant="outlined" onClick={signOut}>Sign Out </Button>
                         &nbsp;&nbsp;
-                        {currentUser.attributes.email}
+                        {/* {currentUser.attributes.email} */}
                         &nbsp;&nbsp;
                         {currentUser.signInUserSession.accessToken.payload["cognito:groups"]}                        
-                        <Button variant="outlined" onClick={() => addProtocols()}>Add Categories</Button>
+                        {/* <Button variant="outlined" onClick={() => addProtocols()}>Add Categories</Button> */}
                     </div>
                     :
                     <div>
                         <Button variant="outlined" onClick={() => signIn("user1@cuplease.com","mmmm3333")}>Sign In user 1</Button>
                         <Button variant="outlined" onClick={() => signIn("user2@cuplease.com","mmmm3333")}>Sign In user 2</Button>
                         <Button variant="outlined" onClick={() => signIn("user3@cuplease.com","mmmm3333")}>Sign In user 3</Button>
+                        <Typography>To write comments, you must sign in with one of this users</Typography>
                         {/* <Button variant="outlined" onClick={() => signIn("admin1@cuplease.com","mmmm3333")}>Sign In admin 1</Button> */}
                     </div>
                 }
+                <Button onClick={clearDataStore}>Data errors, Press here</Button>
             </CardActions>
             <CardContent>
-                <div className={classes.box}>
+                <AddSuggestedAppLink query={query}></AddSuggestedAppLink>
+                {/* <div className={classes.box}>
                     <SearchBar query={query} doSearch={doSearch}></SearchBar>
-                </div>
+                </div> */}
             </CardContent>
         </Card>
     )

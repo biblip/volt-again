@@ -142,6 +142,51 @@ export const onDeleteCategory = /* GraphQL */ `
     }
   }
 `;
+export const onCreateAppLinkManifest = /* GraphQL */ `
+  subscription OnCreateAppLinkManifest {
+    onCreateAppLinkManifest {
+      id
+      domain
+      manifest
+      categoryID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAppLinkManifest = /* GraphQL */ `
+  subscription OnUpdateAppLinkManifest {
+    onUpdateAppLinkManifest {
+      id
+      domain
+      manifest
+      categoryID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAppLinkManifest = /* GraphQL */ `
+  subscription OnDeleteAppLinkManifest {
+    onDeleteAppLinkManifest {
+      id
+      domain
+      manifest
+      categoryID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateAppLink = /* GraphQL */ `
   subscription OnCreateAppLink {
     onCreateAppLink {
@@ -149,7 +194,6 @@ export const onCreateAppLink = /* GraphQL */ `
       domain
       path
       resource
-      manifest
       categoryID
       _version
       _deleted
@@ -167,7 +211,6 @@ export const onUpdateAppLink = /* GraphQL */ `
       domain
       path
       resource
-      manifest
       categoryID
       _version
       _deleted
@@ -185,7 +228,6 @@ export const onDeleteAppLink = /* GraphQL */ `
       domain
       path
       resource
-      manifest
       categoryID
       _version
       _deleted

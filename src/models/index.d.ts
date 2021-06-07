@@ -49,12 +49,22 @@ export declare class Category {
   static copyOf(source: Category, mutator: (draft: MutableModel<Category>) => MutableModel<Category> | void): Category;
 }
 
+export declare class AppLinkManifest {
+  readonly id: string;
+  readonly domain: string;
+  readonly manifest: string;
+  readonly categoryID?: string;
+  readonly createdAt?: string;
+  readonly updatedAt?: string;
+  constructor(init: ModelInit<AppLinkManifest>);
+  static copyOf(source: AppLinkManifest, mutator: (draft: MutableModel<AppLinkManifest>) => MutableModel<AppLinkManifest> | void): AppLinkManifest;
+}
+
 export declare class AppLink {
   readonly id: string;
   readonly domain: string;
   readonly path?: string;
   readonly resource?: string;
-  readonly manifest: string;
   readonly categoryID?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;

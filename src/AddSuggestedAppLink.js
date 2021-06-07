@@ -2,16 +2,18 @@
 
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, FormControl, Grid, InputLabel, makeStyles, MenuItem, Select, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Input, InputAdornment, Typography } from '@material-ui/core'
+import { Button, FormControl, Grid, InputLabel, makeStyles, MenuItem, Select, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputAdornment, Typography } from '@material-ui/core'
 import { DataStore, SortDirection } from 'aws-amplify';
-import { AppLink, Category, CommentStatus, SingleComment } from './models';
-import { AccountCircle } from '@material-ui/icons';
+import { AppLink, AppLinkManifest, Category, CommentStatus, SingleComment } from './models';
+import MessageIcon from '@material-ui/icons/Message';
+import ShowComment from './components/ShowComment';
+import { Autocomplete } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
     margin: {
         margin: theme.spacing(1),
         minWidth: 120,
-        width: "100%",
+        width: "95%",
     }
 }));
 
@@ -20,9 +22,8 @@ function AddSuggestedAppLink(props) {
     const [categories, setCategories] = useState([]);
     const [currentCategory, setCurrentCategory] = useState("none");
     const [currentDomainQuery, setCurrentDomainQuery] = useState(props.query);
-    const [currentDomain, setCurrentDomain] = useState();
-    const [currentSection, setCurrentSection] = useState("");
-    const [currentResource, setCurrentResource] = useState("");
+    const [currentDomain, setCurrentDomain] = useState({"domain": null, "manifest": "{}", "section": "", "resource": ""});
+    const [domainSuggestions, setDomainSuggestions] = useState([]);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
 
@@ -34,6 +35,7 @@ function AddSuggestedAppLink(props) {
             setTimeout(() => {
                 setPendingComment(null);
             }, 3000);
+            setComments([]);
         } else {
             getSingleComments();
         }
@@ -50,16 +52,40 @@ function AddSuggestedAppLink(props) {
         if (categories.length>0) {
             getSingleComments();
         }
-    }, [currentCategory, currentDomain, currentSection, currentResource]);
+    }, [currentCategory, currentDomain]);
 
     async function getDomainSuggestions() {
-        const models = await DataStore.query(AppLink, c => c.domain("contains", currentDomainQuery));
-        const found = await DataStore.query(AppLink, c => c.domain("eq", currentDomainQuery));
-        if (found.length === 1) {
-            console.log(found);
-            setCurrentDomain(found[0]);
+        const models = await DataStore.query(AppLink, c =>
+            c.categoryID("eq", currentCategory.id)
+            .domain("contains", currentDomainQuery)
+            .path("eq", "")
+            .resource("eq", ""));
+        setDomainSuggestions(models);
+        const foundDomain = await DataStore.query(AppLink, c => 
+            c.categoryID("eq", currentCategory.id)
+            .domain("eq", currentDomainQuery)
+            .path("eq", currentDomain.section)
+            .resource("eq", currentDomain.resource));
+        const foundDomainManifest = await DataStore.query(AppLinkManifest, c => 
+            c.categoryID("eq", currentCategory.id)
+            .domain("eq", currentDomainQuery));
+        if (foundDomain.length===1) {
+            const theManifest = (foundDomainManifest && foundDomainManifest.length===1)?foundDomainManifest[0].manifest:currentCategory.manifest;
+            const theManifestObject = JSON.parse(theManifest);
+            var theSection = "";
+            if (theManifest && theManifestObject.path) {
+                theSection = theManifestObject.path[0];
+            }
+            setCurrentDomain(prevState => ({
+                domain: (foundDomain && foundDomain.length===1)?foundDomain[0]:null,
+                manifest: theManifest,
+                section: theSection,
+                resource: ""
+            }));
         } else {
-            setCurrentDomain(null);
+            if (typeof currentCategory!=="string") {
+                setCurrentDomain({"domain": null, "manifest": currentCategory.manifest, "section": "", "resource": ""});
+            }
         }
     }
 
@@ -74,8 +100,11 @@ function AddSuggestedAppLink(props) {
     }
 
     async function getSingleComments() {
-
-        const domain = await DataStore.query(AppLink, c => c.domain("eq", currentDomainQuery).categoryID("eq", currentCategory.id));
+        const domain = await DataStore.query(AppLink, c => 
+            c.categoryID("eq", currentCategory.id)
+            .domain("eq", currentDomainQuery)
+            .path("eq", currentDomain.section)
+            .resource("eq", currentDomain.resource));
         if (domain.length===1) {
             const models = await DataStore.query(SingleComment, 
                 c => c.appLinkID("eq", domain[0].id), 
@@ -109,15 +138,47 @@ function AddSuggestedAppLink(props) {
     function handleChange(event) {
         if (event && event.target) {
             switch (event.target.name) {
-                case "category": setCurrentCategory(event.target.value);
+                case "category":
+                    const foundCategory = categories.filter((item) => event.target.value===item.name);
+                    if (foundCategory.length===1) {
+                        setCurrentCategory(foundCategory[0]);
+                        try {
+                            const theManifest = JSON.parse(foundCategory[0].manifest);
+                            const theSection = (theManifest.path && theManifest.path.length>0)?theManifest.path[0]:"";
+                            setCurrentDomain(prevState => ({
+                                ...prevState,
+                                manifest: foundCategory[0].manifest,
+                                section: theSection,
+                                resource: ""
+                            }));
+                        } catch {
+
+                        }
+                    }
                     break;
                 case "domain": setCurrentDomainQuery(event.target.value);
+                    //console.log("currentCategory");
+                    //console.log(currentCategory);
+                    //setCurrentDomain({"domain": null, "manifest": currentCategory.manifest, "section": "", "resource": ""});
+
+                    //console.log("currentCategory");
+                    //console.log(currentCategory);
+                    //const theManifest = JSON.parse(currentCategory.manifest);
+                    //const theSection = (theManifest.path && theManifest.path.length>0)?theManifest.path[0]:"";
+                    //setCurrentDomain({"domain": null, "manifest": currentCategory.manifest, "section": theSection, "resource": ""});
                     break;
-                case "section": setCurrentSection(event.target.value);
+                case "section":
+                    setCurrentDomain(prevState => ({
+                        ...prevState,
+                        section: event.target.value,
+                        resource: ""
+                    }));
                     break;
-                case "section-1": setCurrentSection(event.target.value);
-                    break;
-                case "resource": setCurrentResource(event.target.value);
+                case "resource":
+                    setCurrentDomain(prevState => ({
+                        ...prevState,
+                        resource: event.target.value
+                    }));
                     break;
                 case "newComment": setNewComment(event.target.value);
                     break;
@@ -129,16 +190,31 @@ function AddSuggestedAppLink(props) {
     const currentUser = null;
 
     async function addSingleComment() {
-        const domain = await DataStore.query(AppLink, c => c.domain("eq", currentDomainQuery).categoryID("eq", currentCategory.id));
+        const domain = await DataStore.query(AppLink, c => 
+            c.categoryID("eq", currentCategory.id)
+            .domain("eq", currentDomainQuery)
+            .path("eq", currentDomain.section)
+            .resource("eq", currentDomain.resource));
         var currentDomainID = null;
         if (domain.length===0) {
+            // save the empty domain   ( path = "" and resource = "" )
             var newAppLink = {};
             newAppLink.domain = currentDomainQuery;
             newAppLink.path = "";
             newAppLink.resource = "";
             newAppLink.manifest = "{}";
             newAppLink.categoryID = currentCategory.id;
-            const appLink = await DataStore.save(new AppLink(newAppLink));
+            var appLink = await DataStore.save(new AppLink(newAppLink));
+
+            // if path != "" or resource != "" then, crea the full appLink
+            if (currentDomain.section!=="" || currentDomain.resource!=="") {
+                newAppLink.domain = currentDomainQuery;
+                newAppLink.path = currentDomain.section;
+                newAppLink.resource = currentDomain.resource;
+                newAppLink.manifest = "{}";
+                newAppLink.categoryID = currentCategory.id;
+                appLink = await DataStore.save(new AppLink(newAppLink));
+            }
             currentDomainID = appLink.id;
         } else {
             currentDomainID = domain[0].id;
@@ -150,125 +226,87 @@ function AddSuggestedAppLink(props) {
         newCommentObject.status = CommentStatus.VISIBLE;
         newCommentObject.appLinkID = currentDomainID;
         await DataStore.save(new SingleComment(newCommentObject)).then(()=>{
-            getSingleComments();
             setPendingComment(newComment);
         });
     }
 
     return (
-        <Grid container direction='column' justify='space-between' spacing={3}>
+        <Grid container direction='column' justify='space-between' spacing={2}>
             <Grid item xs>
                 <Grid container direction='row'>
-                    <Grid item xs={12} md={3}>
-                        <FormControl variant="outlined" className={classes.margin}>
-                            <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-outlined-label"
-                                id="demo-simple-select-outlined"
-                                name="category"
-                                value={currentCategory}
-                                onChange={handleChange}
-                                label="Category"
-                            >
-                                <MenuItem value="none">
-                                    <em>none</em>
-                                </MenuItem>
-                                {
-                                    categories.map((item, index) =>
-                                        <MenuItem key={index} value={item}>{item.name}</MenuItem>
-                                    )
-                                }
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={3}>
+                    <Grid item xs={6} md={3}>
                         <FormControl className={classes.margin}>
-                            <TextField
-                                name="domain"
-                                label={(() => {
-                                    if (currentCategory.manifest) {
-                                        const manifest = JSON.parse(currentCategory.manifest);
-                                        return manifest.domain;
-                                    } else {
-                                        return "";
-                                    }
-                                })()}
-                                value={currentDomainQuery}
-                                onChange={handleChange}
-                                variant="outlined"
+                            <Autocomplete
+                                options={categories.map((option) => option.name)}
+                                clearOnEscape
+                                selectOnFocus
+                                onBlurCapture={handleChange}
+                                renderInput={(params) => (
+                                    <TextField {...params} name="category" label="Category" margin="normal" variant="outlined" />
+                                )}
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={3}>
+                    <Grid item xs={6} md={3}>
+                        <FormControl className={classes.margin}>
+                            <Autocomplete
+                                options={domainSuggestions.map((option) => option.domain)}
+                                freeSolo
+                                onSelect={handleChange}
+                                renderInput={(params) => (
+                                    <TextField 
+                                        {...params} 
+                                        name="domain" 
+                                        label={(() => {
+                                                if (currentCategory.manifest) {
+                                                    const manifest = JSON.parse(currentCategory.manifest);
+                                                    return manifest.domain;
+                                                } else {
+                                                    return "";
+                                                }
+                                        })()}
+                                        margin="normal"
+                                        value={currentDomainQuery}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                    />
+                                )}
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={6} md={3}>
                         {
                             (() => {
-                                var manifestString = "{}";
-                                if (currentDomain) {
-                                    if (currentDomain.manifest === manifestString) {
-                                        manifestString = currentCategory.manifest;
-                                    } else {
-                                        manifestString = currentDomain.manifest;
-                                    }
-                                    //manifestString = currentDomain?currentDomain.manifest:currentCategory.manifest;
-                                } else {
-                                    manifestString = currentCategory.manifest;
+                                var manifestString = currentDomain.manifest;
+                                if (!manifestString) return null;
+                                const manifest = JSON.parse(manifestString);
+                                if (manifest.path && manifest.path.length>0) {
+                                    const path = manifest.path;
+                                    return (
+                                        <FormControl variant="outlined" className={classes.margin}>
+                                            <InputLabel id="demo-simple-select-outlined-label">Section</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-outlined-label"
+                                                id="demo-simple-select-outlined"
+                                                name="section"
+                                                value={currentDomain.section}
+                                                onChange={handleChange}
+                                                label="Section"
+                                            >
+                                                {
+                                                    path.map((item, index) =>
+                                                        <MenuItem key={index} value={item}>{item}</MenuItem>
+                                                    )
+                                                }
+                                            </Select>
+                                        </FormControl>
+                                    )
                                 }
-                                if (manifestString) {
-                                    const manifest = JSON.parse(manifestString);
-                                    if (manifest.path) {
-                                        const path = manifest.path;
-                                        if (typeof path === "string") {
-                                            return (
-                                                <FormControl className={classes.margin}>
-                                                    <TextField
-                                                        name="section-1"
-                                                        label={(() => {
-                                                            if (currentCategory.manifest) {
-                                                                const manifest = JSON.parse(currentCategory.manifest);
-                                                                return manifest.path;
-                                                            } else {
-                                                                return "";
-                                                            }
-                                                        })()}
-                                                        value={currentSection}
-                                                        onChange={handleChange}
-                                                        //helperText="Some important text"
-                                                        variant="outlined"
-                                                    />
-                                                </FormControl>
-                                            )
-                                        } else {
-                                            return (
-                                                <FormControl variant="outlined" className={classes.margin}>
-                                                    <InputLabel id="demo-simple-select-outlined-label">Section</InputLabel>
-                                                    <Select
-                                                        labelId="demo-simple-select-outlined-label"
-                                                        id="demo-simple-select-outlined"
-                                                        name="section"
-                                                        value={currentSection}
-                                                        onChange={handleChange}
-                                                        label="Section"
-                                                    >
-                                                        <MenuItem value="none">
-                                                            <em>none</em>
-                                                        </MenuItem>
-                                                        {
-                                                            path.map((item, index) =>
-                                                                <MenuItem key={index} value={item}>{item}</MenuItem>
-                                                            )
-                                                        }
-                                                    </Select>
-                                                </FormControl>
-                                            )
-                                        }
-                                    } return null
-                                } else {
-                                    return null
-                                }
+                                return null                                
                             })()
                         }
                     </Grid>
-                    <Grid item xs={12} md={3}>
+                    <Grid item xs={6} md={3}>
                         {
                             (() => {
                                 if (currentCategory.manifest) {
@@ -287,7 +325,7 @@ function AddSuggestedAppLink(props) {
                                                         }
                                                     })()
                                                     }
-                                                    value={currentResource}
+                                                    value={currentDomain.resource}
                                                     onChange={handleChange}
                                                     // helperText="Some important text"
                                                     variant="outlined"
@@ -332,13 +370,16 @@ function AddSuggestedAppLink(props) {
                             variant="filled"
                             value={newComment}
                             onChange={handleChange}
+                            inputProps={{
+                                maxLength: 300,
+                            }}
                             InputProps={{
                                 startAdornment: (
-                                  <InputAdornment position="start">
-                                    <AccountCircle />
+                                  <InputAdornment position="end">
+                                    <MessageIcon />
                                   </InputAdornment>
                                 ),
-                              }}
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12} md={3}>
@@ -381,21 +422,13 @@ function AddSuggestedAppLink(props) {
                             <TableCell>
                                 Comment
                             </TableCell>
-                            <TableCell>
-                                Date
-                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {
                             comments.map((item, index) =>
                                 <TableRow key={index}>
-                                    <TableCell>
-                                        {item.content}
-                                    </TableCell>
-                                    <TableCell>
-                                        {item.createdAt}
-                                    </TableCell>
+                                    <ShowComment comment={item} />
                                 </TableRow>
                             )
                         }

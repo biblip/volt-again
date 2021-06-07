@@ -270,6 +270,97 @@ export const schema = {
                 }
             ]
         },
+        "AppLinkManifest": {
+            "name": "AppLinkManifest",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "domain": {
+                    "name": "domain",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "manifest": {
+                    "name": "manifest",
+                    "isArray": false,
+                    "type": "AWSJSON",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "categoryID": {
+                    "name": "categoryID",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "AppLinkManifests",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "provider": "iam",
+                                "operations": [
+                                    "read"
+                                ]
+                            },
+                            {
+                                "allow": "private",
+                                "operations": [
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admin"
+                                ],
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
         "AppLink": {
             "name": "AppLink",
             "fields": {
@@ -299,13 +390,6 @@ export const schema = {
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
-                    "attributes": []
-                },
-                "manifest": {
-                    "name": "manifest",
-                    "isArray": false,
-                    "type": "AWSJSON",
-                    "isRequired": true,
                     "attributes": []
                 },
                 "categoryID": {
@@ -729,5 +813,5 @@ export const schema = {
         }
     },
     "nonModels": {},
-    "version": "36e2ea38cbd12a7cf01811b4f1945da3"
+    "version": "db3ada77523b714a7940acae077dfb62"
 };

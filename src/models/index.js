@@ -16,12 +16,13 @@ const CommentStatus = {
   "SANCTIONED": "SANCTIONED"
 };
 
-const { Task, SuggestedAppLink, Category, AppLink, Post, Comment, SingleComment } = initSchema(schema);
+const { Task, SuggestedAppLink, Category, AppLinkManifest, AppLink, Post, Comment, SingleComment } = initSchema(schema);
 
 export {
   Task,
   SuggestedAppLink,
   Category,
+  AppLinkManifest,
   AppLink,
   Post,
   Comment,
