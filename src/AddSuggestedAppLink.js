@@ -9,6 +9,13 @@ import MessageIcon from '@material-ui/icons/Message';
 import ShowComment from './components/ShowComment';
 import { Autocomplete } from '@material-ui/lab';
 
+const initialDomain = {
+    "domain": null, 
+    "manifest": "{}", 
+    "section": "", 
+    "resource": "",
+}
+
 const useStyles = makeStyles((theme) => ({
     margin: {
         margin: theme.spacing(1),
@@ -28,8 +35,9 @@ function AddSuggestedAppLink(props) {
     const [categories, setCategories] = useState([]);
     const [currentCategory, setCurrentCategory] = useState("none");
     const [currentDomainQuery, setCurrentDomainQuery] = useState(props.query);
-    const [currentDomain, setCurrentDomain] = useState({"domain": null, "manifest": "{}", "section": "", "resource": ""});
+    const [currentDomain, setCurrentDomain] = useState(initialDomain);
     const [domainSuggestions, setDomainSuggestions] = useState([]);
+    const [resourceSuggestions, setResourceSuggestions] = useState([]);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
 
@@ -59,6 +67,27 @@ function AddSuggestedAppLink(props) {
             getSingleComments();
         }
     }, [currentCategory, currentDomain]);
+
+    async function getResourceSuggestions() {
+        if (currentCategory && currentDomain.domain) {
+            const models = await DataStore.query(AppLink, c =>
+                c.categoryID("eq", currentCategory.id)
+                .domain("eq", currentDomain.domain.domain)
+                .path("eq", currentDomain.section)
+                .resource("contains", currentDomain.resource)
+                );
+            setResourceSuggestions(models);
+        }
+    }
+
+    useEffect(() => {
+        getResourceSuggestions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentDomain.resource]);
+
+    useEffect(() => {
+        setResourceSuggestions([]);
+    }, [currentDomain.domain, currentDomain.section]);
 
     async function getDomainSuggestions() {
         const models = await DataStore.query(AppLink, c =>
@@ -90,7 +119,7 @@ function AddSuggestedAppLink(props) {
             }));
         } else {
             if (typeof currentCategory!=="string") {
-                setCurrentDomain({"domain": null, "manifest": currentCategory.manifest, "section": "", "resource": ""});
+                setCurrentDomain(initialDomain);
             }
         }
     }
@@ -165,13 +194,13 @@ function AddSuggestedAppLink(props) {
                 case "domain": setCurrentDomainQuery(event.target.value);
                     //console.log("currentCategory");
                     //console.log(currentCategory);
-                    //setCurrentDomain({"domain": null, "manifest": currentCategory.manifest, "section": "", "resource": ""});
+                    //setCurrentDomain(initialDomain);
 
                     //console.log("currentCategory");
                     //console.log(currentCategory);
                     //const theManifest = JSON.parse(currentCategory.manifest);
                     //const theSection = (theManifest.path && theManifest.path.length>0)?theManifest.path[0]:"";
-                    //setCurrentDomain({"domain": null, "manifest": currentCategory.manifest, "section": theSection, "resource": ""});
+                    //setCurrentDomain(initialDomain);
                     break;
                 case "section":
                     setCurrentDomain(prevState => ({
@@ -193,8 +222,6 @@ function AddSuggestedAppLink(props) {
         }
     }
 
-    const currentUser = null;
-
     async function addSingleComment() {
         const domain = await DataStore.query(AppLink, c => 
             c.categoryID("eq", currentCategory.id)
@@ -202,15 +229,29 @@ function AddSuggestedAppLink(props) {
             .path("eq", currentDomain.section)
             .resource("eq", currentDomain.resource));
         var currentDomainID = null;
-        if (domain.length===0) {
-            // save the empty domain   ( path = "" and resource = "" )
+        if (domain.length===0) { // el dominio no estaba creado.
+
+            // query the empty domain
+            const emptyDomain = await DataStore.query(AppLink, c => 
+                c.categoryID("eq", currentCategory.id)
+                .domain("eq", currentDomainQuery)
+                .path("eq", "")
+                .resource("eq", ""));
+
+            var appLink;
             var newAppLink = {};
-            newAppLink.domain = currentDomainQuery;
-            newAppLink.path = "";
-            newAppLink.resource = "";
-            newAppLink.manifest = "{}";
-            newAppLink.categoryID = currentCategory.id;
-            var appLink = await DataStore.save(new AppLink(newAppLink));
+
+            if (emptyDomain.length===0) {
+                // save the empty domain   ( path = "" and resource = "" )
+                newAppLink.domain = currentDomainQuery;
+                newAppLink.path = "";
+                newAppLink.resource = "";
+                newAppLink.manifest = "{}";
+                newAppLink.categoryID = currentCategory.id;
+                appLink = await DataStore.save(new AppLink(newAppLink));
+            } else {
+                appLink = emptyDomain[0];
+            }
 
             // if path != "" or resource != "" then, crea the full appLink
             if (currentDomain.section!=="" || currentDomain.resource!=="") {
@@ -223,10 +264,11 @@ function AddSuggestedAppLink(props) {
             }
             currentDomainID = appLink.id;
         } else {
+            // ya estaba el appLink creado.
             currentDomainID = domain[0].id;
         }
         
-        // ya estaba el appLink creado, solo adiciona el comentario.
+        // adiciona el comentario
         var newCommentObject = {};
         newCommentObject.content = newComment;
         newCommentObject.status = CommentStatus.VISIBLE;
@@ -244,14 +286,12 @@ function AddSuggestedAppLink(props) {
 
     const showAddComment = (currentCategory.name && currentDomainQuery!=="")?true:false;
 
-    console.log(showAddComment);
-
     return (
         <Grid container direction='column' justify='space-between' spacing={2}>
             <Grid item xs>
                 <Grid container direction='row'>
                     <Grid>
-                        <Typography className={classes.title} color="textPrimary">Select a category, and write on your favorite thing and connect with people.</Typography>
+                        <Typography className={classes.title} color="textPrimary">Select a category, write on your favorite thing and connect with people.</Typography>
                     </Grid>
                 </Grid>
                 <Grid container direction='row'>
@@ -336,23 +376,48 @@ function AddSuggestedAppLink(props) {
                                     if (manifest.resource) {
                                         return (
                                             <FormControl className={classes.margin}>
-                                                <TextField
-                                                    name="resource"
-                                                    label={(() => {
-                                                        if (currentCategory.manifest) {
-                                                            const manifest = JSON.parse(currentCategory.manifest);
-                                                            return manifest.resource;
-                                                        } else {
-                                                            return "";
-                                                        }
-                                                    })()
-                                                    }
-                                                    value={currentDomain.resource}
-                                                    onChange={handleChange}
-                                                    // helperText="Some important text"
-                                                    variant="outlined"
+                                                <Autocomplete
+                                                    options={resourceSuggestions.map((option) => option.resource)}
+                                                    freeSolo
+                                                    onSelect={handleChange}
+                                                    renderInput={(params) => (
+                                                        <TextField 
+                                                            {...params} 
+                                                            name="resource" 
+                                                            label={(() => {
+                                                                    if (currentCategory.manifest) {
+                                                                        const manifest = JSON.parse(currentCategory.manifest);
+                                                                        return manifest.resource;
+                                                                    } else {
+                                                                        return "";
+                                                                    }
+                                                            })()}
+                                                            margin="normal"
+                                                            value={currentDomain.resource}
+                                                            onChange={handleChange}
+                                                            variant="outlined"
+                                                        />
+                                                    )}
                                                 />
                                             </FormControl>
+                                            // <FormControl className={classes.margin}>
+                                            //     <TextField
+                                            //         name="resource"
+                                            //         label={(() => {
+                                            //             if (currentCategory.manifest) {
+                                            //                 const manifest = JSON.parse(currentCategory.manifest);
+                                            //                 return manifest.resource;
+                                            //             } else {
+                                            //                 return "";
+                                            //             }
+                                            //         })()
+                                            //         }
+                                            //         value={currentDomain.resource}
+                                            //         onChange={handleChange}
+                                            //         // helperText="Some important text"
+                                            //         variant="outlined"
+                                            //     />
+                                            // </FormControl>
                                         )
                                     }
                                 } else {
