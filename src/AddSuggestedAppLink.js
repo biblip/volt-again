@@ -242,6 +242,10 @@ function AddSuggestedAppLink(props) {
         }
     }
 
+    const showAddComment = (currentCategory.name && currentDomainQuery!=="")?true:false;
+
+    console.log(showAddComment);
+
     return (
         <Grid container direction='column' justify='space-between' spacing={2}>
             <Grid item xs>
@@ -376,7 +380,7 @@ function AddSuggestedAppLink(props) {
                 </Grid>
             </Grid>
             {
-                comments && comments.length===0 && <Grid item xs>
+                showAddComment && comments && comments.length===0 && <Grid item xs>
                 <Grid container direction='row'>
                     <Grid item xs={12} md>
                         <Typography className={classes.subtitle}>Be the first person commenting on this!</Typography>
@@ -384,7 +388,9 @@ function AddSuggestedAppLink(props) {
                 </Grid>
             </Grid>
             }
-            <Grid item xs>
+
+            {
+                showAddComment && <Grid item xs>
                 <Grid container direction='row'>
                     <Grid item xs={12} md>
                         <TextField
@@ -416,8 +422,9 @@ function AddSuggestedAppLink(props) {
                     </Grid>
                 </Grid>
             </Grid>
+            }
             {
-                pendingComment && <Grid item xs>
+                showAddComment && pendingComment && <Grid item xs>
                     <Grid container direction='row'>
                         <Grid item xs={12} md>
                             <Typography>Pending...{pendingComment}</Typography>
@@ -442,26 +449,28 @@ function AddSuggestedAppLink(props) {
                     <Button style={{ visibility: true ? 'visible' : 'hidden' }} size='small' color='primary' >Next</Button>
                 </Grid>
             </Grid> */}
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>
-                                Comment
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {
-                            comments.map((item, index) =>
-                                <TableRow key={index}>
-                                    <ShowComment comment={item} />
-                                </TableRow>
-                            )
-                        }
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            {
+                showAddComment && <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>
+                                    Comment
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {
+                                comments.map((item, index) =>
+                                    <TableRow key={index}>
+                                        <ShowComment comment={item} />
+                                    </TableRow>
+                                )
+                            }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            }
         </Grid>
     )
 }
