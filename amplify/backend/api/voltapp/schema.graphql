@@ -31,42 +31,47 @@ type Category @model @auth(rules: [{allow: public, provider: iam, operations: [r
   shortName: String!
   name: String!
   manifest: AWSJSON!
+  applink: [AppLink] @connection(keyName: "byCategory", fields: ["id"])
+  applinkmanifests: [AppLinkManifest] @connection(keyName: "byCategory", fields: ["id"])
 }
 
-type AppLinkManifest @model @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}]) {
-    id: ID!
-    domain: String!
-    manifest: AWSJSON!
-    categoryID: String
+type AppLinkManifest @model @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}]) @key(name: "byCategory", fields: ["categoryID"]) {
+  id: ID!
+  domain: String!
+  manifest: AWSJSON!
+  categoryID: ID
 }
 
-type AppLink @model @searchable @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}, {allow: owner, operations: [create, update, read]}]) {
+type AppLink @model @searchable @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}, {allow: owner, operations: [create, update, read]}]) @key(name: "byCategory", fields: ["categoryID"]) {
   id: ID!
   domain: String!
   path: String
   resource: String
-  categoryID: String
+  categoryID: ID
+  singlecomments: [SingleComment] @connection(keyName: "byAppLink", fields: ["id"])
+  posts: [Post] @connection(keyName: "byAppLink", fields: ["id"])
 }
 
-type Post @model @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}, {allow: owner, operations: [create, update, read]}]) {
+type PostComment @model @auth(rules: [{allow: private, operations: [read]}, {allow: owner, operations: [create, update, read]}]) @key(name: "byPost", fields: ["postID"]) {
+  id: ID!
+  content: String!
+  status: String
+  postID: ID
+}
+
+type Post @model @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}, {allow: owner, operations: [create, update, read]}]) @key(name: "byAppLink", fields: ["applinkID"]) {
   id: ID!
   title: String!
   content: String!
   status: PostStatus
-  appLinkID: String
+  applinkID: ID
+  postcomments: [PostComment] @connection(keyName: "byPost", fields: ["id"])
 }
 
-type Comment @model @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}, {allow: owner, operations: [create, update, read]}]) {
-  id: ID!
-  content: String!
-  status: String
-  postID: String
-}
-
-type SingleComment @model @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}, {allow: owner, operations: [create, update, read]}]) {
+type SingleComment @model @auth(rules: [{allow: public, provider: iam, operations: [read]}, {allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}, {allow: owner, operations: [create, update, read]}]) @key(name: "byAppLink", fields: ["applinkID"]) {
   id: ID!
   content: String!
   status: CommentStatus
-  appLinkID: String
+  applinkID: ID
 }
  
