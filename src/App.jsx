@@ -129,7 +129,6 @@ function App(props) {
 
     const hubAuth = (event) => {
         setCurrentUser(event.payload.data);
-        console.log(event.payload.data);
     }
 
     useEffect(() => {
