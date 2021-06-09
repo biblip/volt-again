@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, FormControl, Grid, InputLabel, makeStyles, MenuItem, Select, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputAdornment, Typography } from '@material-ui/core'
+import { Button, FormControl, Grid, makeStyles, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputAdornment, Typography } from '@material-ui/core'
 import { DataStore, SortDirection } from 'aws-amplify';
 import { AppLink, AppLinkManifest, Category, CommentStatus, SingleComment } from './models';
 import MessageIcon from '@material-ui/icons/Message';
@@ -66,7 +66,13 @@ function AddSuggestedAppLink(props) {
         if (categories.length>0) {
             getSingleComments();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentCategory, currentDomain]);
+
+    useEffect(() => {
+        getDomainSuggestions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentCategory]);
 
     async function getResourceSuggestions() {
         if (currentCategory && currentDomain.domain) {
@@ -87,7 +93,12 @@ function AddSuggestedAppLink(props) {
 
     useEffect(() => {
         setResourceSuggestions([]);
-    }, [currentDomain.domain, currentDomain.section]);
+    }, [currentDomain.domain]);
+
+    useEffect(() => {
+        getResourceSuggestions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentDomain.section])
 
     async function getDomainSuggestions() {
         const models = await DataStore.query(AppLink, c =>
@@ -142,7 +153,7 @@ function AddSuggestedAppLink(props) {
             .resource("eq", currentDomain.resource));
         if (domain.length===1) {
             const models = await DataStore.query(SingleComment, 
-                c => c.appLinkID("eq", domain[0].id), 
+                c => c.applinkID("eq", domain[0].id), 
                 { sort: (row) => row.createdAt(SortDirection.DESCENDING) }
             );
             setComments(models);
@@ -150,25 +161,6 @@ function AddSuggestedAppLink(props) {
             setComments([]);
         }
     }
-
-    /*
-    function addSuggestedAppLink() {
-        console.log("addSuggestedAppLink " + currentCategory + ":" + currentDomainQuery + ":" + currentResource);
-        DataStore.save(
-            new SuggestedAppLink({
-                "category": currentCategory,
-                "domain": currentDomainQuery,
-                "resource": currentResource
-            })
-        ).then((xxx) => {
-            console.log("Success");
-            console.log(xxx);
-        }).catch((xxx) => {
-            console.log("Error");
-            console.log(xxx);
-        })
-    }
-    */
 
     function handleChange(event) {
         if (event && event.target) {
@@ -191,16 +183,8 @@ function AddSuggestedAppLink(props) {
                         }
                     }
                     break;
-                case "domain": setCurrentDomainQuery(event.target.value);
-                    //console.log("currentCategory");
-                    //console.log(currentCategory);
-                    //setCurrentDomain(initialDomain);
-
-                    //console.log("currentCategory");
-                    //console.log(currentCategory);
-                    //const theManifest = JSON.parse(currentCategory.manifest);
-                    //const theSection = (theManifest.path && theManifest.path.length>0)?theManifest.path[0]:"";
-                    //setCurrentDomain(initialDomain);
+                case "domain":
+                    setCurrentDomainQuery(event.target.value);
                     break;
                 case "section":
                     setCurrentDomain(prevState => ({
@@ -272,7 +256,7 @@ function AddSuggestedAppLink(props) {
         var newCommentObject = {};
         newCommentObject.content = newComment;
         newCommentObject.status = CommentStatus.VISIBLE;
-        newCommentObject.appLinkID = currentDomainID;
+        newCommentObject.applinkID = currentDomainID;
         await DataStore.save(new SingleComment(newCommentObject)).then(()=>{
             setPendingComment(newComment);
         });
@@ -299,6 +283,7 @@ function AddSuggestedAppLink(props) {
                         <FormControl className={classes.margin}>
                             <Autocomplete
                                 options={categories.map((option) => option.name)}
+                                openOnFocus
                                 onOpen={onOpenCategory}
                                 clearOnEscape
                                 selectOnFocus
@@ -314,6 +299,8 @@ function AddSuggestedAppLink(props) {
                             <Autocomplete
                                 options={domainSuggestions.map((option) => option.domain)}
                                 freeSolo
+                                openOnFocus
+                                selectOnFocus
                                 onSelect={handleChange}
                                 renderInput={(params) => (
                                     <TextField 
@@ -345,23 +332,42 @@ function AddSuggestedAppLink(props) {
                                 if (manifest.path && manifest.path.length>0) {
                                     const path = manifest.path;
                                     return (
-                                        <FormControl variant="outlined" className={classes.margin}>
-                                            <InputLabel id="demo-simple-select-outlined-label">Section</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-outlined-label"
-                                                id="demo-simple-select-outlined"
-                                                name="section"
-                                                value={currentDomain.section}
-                                                onChange={handleChange}
-                                                label="Section"
-                                            >
-                                                {
-                                                    path.map((item, index) =>
-                                                        <MenuItem key={index} value={item}>{item}</MenuItem>
-                                                    )
-                                                }
-                                            </Select>
+                                        <FormControl className={classes.margin}>
+                                            <Autocomplete
+                                                options={path.map((option) => option)}
+                                                openOnFocus
+                                                onSelect={handleChange}
+                                                renderInput={(params) => (
+                                                    <TextField 
+                                                        {...params} 
+                                                        name="section" 
+                                                        label="Section"
+                                                        margin="normal"
+                                                        value={currentDomain.section}
+                                                        onChange={handleChange}
+                                                        variant="outlined"
+                                                    />
+                                                )}
+                                            />
                                         </FormControl>
+
+                                        // <FormControl variant="outlined" className={classes.margin}>
+                                        //     <InputLabel id="demo-simple-select-outlined-label">Section</InputLabel>
+                                        //     <Select
+                                        //         labelId="demo-simple-select-outlined-label"
+                                        //         id="demo-simple-select-outlined"
+                                        //         name="section"
+                                        //         value={currentDomain.section}
+                                        //         onChange={handleChange}
+                                        //         label="Section"
+                                        //     >
+                                        //         {
+                                        //             path.map((item, index) =>
+                                        //                 <MenuItem key={index} value={item}>{item}</MenuItem>
+                                        //             )
+                                        //         }
+                                        //     </Select>
+                                        // </FormControl>
                                     )
                                 }
                                 return null                                
@@ -371,77 +377,42 @@ function AddSuggestedAppLink(props) {
                     <Grid item xs={6} md={3}>
                         {
                             (() => {
-                                if (currentCategory.manifest) {
-                                    const manifest = JSON.parse(currentCategory.manifest);
-                                    if (manifest.resource) {
-                                        return (
-                                            <FormControl className={classes.margin}>
-                                                <Autocomplete
-                                                    options={resourceSuggestions.map((option) => option.resource)}
-                                                    freeSolo
-                                                    onSelect={handleChange}
-                                                    renderInput={(params) => (
-                                                        <TextField 
-                                                            {...params} 
-                                                            name="resource" 
-                                                            label={(() => {
-                                                                    if (currentCategory.manifest) {
-                                                                        const manifest = JSON.parse(currentCategory.manifest);
-                                                                        return manifest.resource;
-                                                                    } else {
-                                                                        return "";
-                                                                    }
-                                                            })()}
-                                                            margin="normal"
-                                                            value={currentDomain.resource}
-                                                            onChange={handleChange}
-                                                            variant="outlined"
-                                                        />
-                                                    )}
-                                                />
-                                            </FormControl>
-                                            // <FormControl className={classes.margin}>
-                                            //     <TextField
-                                            //         name="resource"
-                                            //         label={(() => {
-                                            //             if (currentCategory.manifest) {
-                                            //                 const manifest = JSON.parse(currentCategory.manifest);
-                                            //                 return manifest.resource;
-                                            //             } else {
-                                            //                 return "";
-                                            //             }
-                                            //         })()
-                                            //         }
-                                            //         value={currentDomain.resource}
-                                            //         onChange={handleChange}
-                                            //         // helperText="Some important text"
-                                            //         variant="outlined"
-                                            //     />
-                                            // </FormControl>
-                                        )
-                                    }
-                                } else {
-                                    return null
+                                var manifestString = currentDomain.manifest;
+                                if (!manifestString) return null;
+                                const manifest = JSON.parse(manifestString);
+                                if (manifest.resource) {
+                                    return (
+                                        <FormControl className={classes.margin}>
+                                            <Autocomplete
+                                                options={resourceSuggestions.map((option) => option.resource)}
+                                                freeSolo
+                                                openOnFocus
+                                                onSelect={handleChange}
+                                                renderInput={(params) => (
+                                                    <TextField 
+                                                        {...params} 
+                                                        name="resource" 
+                                                        label={(() => {
+                                                                if (currentCategory.manifest) {
+                                                                    const manifest = JSON.parse(currentCategory.manifest);
+                                                                    return manifest.resource;
+                                                                } else {
+                                                                    return "";
+                                                                }
+                                                        })()}
+                                                        margin="normal"
+                                                        value={currentDomain.resource}
+                                                        onChange={handleChange}
+                                                        variant="outlined"
+                                                    />
+                                                )}
+                                            />
+                                        </FormControl>
+                                    )
                                 }
                             })()
                         }
                     </Grid>
-                    {/* <Grid item xs={12} md={3}>
-                        <div className="col align-self-center" style={{textAlign: "center"}}>
-                            <Asynchronous 
-                                id="division" 
-                                disabled={!selectedRegion}
-                                src={selectedRegion && LaravelRoute('location.subregion.list', selectedRegion.id)}
-                                value={selectedSubregion}
-                                label={getTralato("Division")}
-                                onChange={onSubregionSelection}
-                                noOptionsText="No Options"
-                                renderOption={(option) => (
-                                        option.name
-                                )}                                  
-                            />
-                        </div>
-                    </Grid> */}
                 </Grid>
             </Grid>
             {
